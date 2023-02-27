@@ -1,0 +1,70 @@
+server:
+  #端口号
+  port: 8081
+
+# 健康检查
+management:
+  endpoints:
+    web:
+      exposure:
+        include: ["health","loggers","metrics"]
+      base-path: /actuator  # 配置 Endpoint 的基础路径
+      cors: # 配置跨域资源共享
+        allowed-methods: GET,POST
+    enabled-by-default: true # 修改全局 endpoint 默认设置
+  endpoint:
+    health: # 显示健康信息，默认开启
+      enabled: true
+      show-details: always
+
+# dubbo 配置
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  dubbo:
+    application:
+      name: traderserver
+    base-package: com.mfml.trader.server
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${spring.datasource.ip}/trader_server?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    druid:
+      initial-size: 2
+      max-active: 5
+      maxWait: 5000
+      timeBetweenEvictionRunsMillis: 60000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      filter:
+        stat:
+          enabled: true
+          db-type: mysql
+        slf4j:
+          enabled: true
+        wall:
+          enabled: true
+          db-type: mysql
+      connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=1000
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.mfml.trader.server.dao.domain,com.mfml.trader.common.dao.domain
+  type-enums-package: com.mfml.trader.common.core.enums
+  global-config:
+    db-config:
+      field-strategy: 1
+      id-type: auto
+    banner: false
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+  check-config-location: true
+
+secret:
+  key: 123abc#

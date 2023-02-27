@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false">
+    <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+    <property name="appName" value="traderserver"/>
+    <property name="LOG_HOME" value="/data/logs/traderserver"/>
+    <property name="LOG_LAYOUT_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}] [%X{EagleEye-TraceID}] [%thread] %-5level %logger{50} - %message%n"/>
+    <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%message：日志消息，%n是换行符-->
+    <property name="STD_LAYOUT_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{traceId}] [%boldYellow(%thread)] %highlight(%-5level) %boldGreen(%logger){50} - %message%n"/>
+    <property name="LOG_CHARSET" value="UTF-8"/>
+    <property name="LOG_LEVEL" value="INFO"/>
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${STD_LAYOUT_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 应用日志开始 -->
+    <appender name="bizLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${LOG_HOME}/${appName}_biz.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <maxFileSize>500MB</maxFileSize>
+            <maxHistory>2</maxHistory>
+            <fileNamePattern>${LOG_HOME}/${appName}_biz-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_LAYOUT_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="errorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <file>${LOG_HOME}/${appName}_error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <maxFileSize>500MB</maxFileSize>
+            <maxHistory>2</maxHistory>
+            <fileNamePattern>${LOG_HOME}/${appName}_error-%d{yyyy-MM-dd}-%i.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${LOG_LAYOUT_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 应用日志结束 -->
+
+    <!-- biz log -->
+    <logger name="com.mfml.trader" additivity="false">
+        <level value="${LOG_LEVEL}"/>
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="bizLog"/>
+        <appender-ref ref="errorLog"/>
+    </logger>
+
+    <!-- 日志输出级别 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="bizLog"/>
+        <appender-ref ref="errorLog"/>
+    </root>
+</configuration>
