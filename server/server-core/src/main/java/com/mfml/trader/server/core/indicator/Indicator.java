@@ -2,6 +2,7 @@ package com.mfml.trader.server.core.indicator;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.mfml.trader.common.core.api.ConstApi;
 import com.mfml.trader.common.core.exception.HttpException;
@@ -25,7 +26,7 @@ public class Indicator {
     @Resource
     RestTemplate restTemplate;
 
-    @Value("${xueqiu.cookie:f506605271b170487ebdc7ad5a647bca282e09b6}")
+    @Value("${xueqiu.cookie}")
     String xueQiuCookie;
 
     /**
@@ -57,7 +58,8 @@ public class Indicator {
         if (!entity.getStatusCode().is2xxSuccessful()) {
             throw new HttpException(String.join("|").join("http status exception", "entity", JsonUtils.toJSONString(entity)));
         }
-        return entity.getBody();
+
+        return JSON.parseObject(entity.getBody()).get("data").toString();
     }
 
     String convIndicator(List<String> indicators) {

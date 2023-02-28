@@ -68,3 +68,6 @@ mybatis-plus:
 
 secret:
   key: 123abc#
+
+xueqiu:
+  cookie: f506605271b170487ebdc7ad5a647bca282e09b6
