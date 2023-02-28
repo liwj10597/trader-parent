@@ -5,14 +5,10 @@ import com.google.common.collect.Lists;
 import com.mfml.trader.common.core.exception.HttpException;
 import com.mfml.trader.common.core.utils.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
 import javax.annotation.Resource;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 
@@ -22,25 +18,23 @@ public class HttpUtil {
 
     @Resource
     RestTemplate restTemplate;
-    @Resource
-    RestTemplate restTemplateCallback;
 
     /**
      * 封装模板get方法
      *
      * @param url 请求地址
-     * @param paramMap 请求参数
+     * @param param 请求参数
      * @param responseClazz 返回对象的clzz对象
      */
-    public <T> T get(String url, Map<String, Object> paramMap, Class<T> responseClazz) {
+    public <T> T get(String url, Map<String, Object> param, Class<T> responseClazz) {
         try {
-            ResponseEntity<T> entity = restTemplate.getForEntity(url, responseClazz, paramMap);
+            ResponseEntity<T> entity = restTemplate.getForEntity(url, responseClazz, param);
             if (!entity.getStatusCode().is2xxSuccessful()) {
-                throw new HttpException(String.join("|").join("http status exection","req" , JsonUtils.toJSONString(paramMap), "res", JsonUtils.toJSONString(entity)));
+                throw new HttpException(String.join("|").join("http status exection","req" , JsonUtils.toJSONString(param), "res", JsonUtils.toJSONString(entity)));
             }
             return entity.getBody();
         } catch (Exception e) {
-            throw new HttpException("post exception " + JsonUtils.toJSONString(paramMap), e);
+            throw new HttpException("post exception " + JsonUtils.toJSONString(param), e);
         }
     }
 
@@ -65,34 +59,6 @@ public class HttpUtil {
             return entity.getBody();
         } catch (Exception e) {
             throw new HttpException("post exception " + JsonUtils.toJSONString(body), e);
-        }
-    }
-
-    /**
-     * 回调方法
-     *
-     * @param url 请求地址
-     * @param paramMap 请求参数
-     * @param responseClazz 返回对象的clzz对象
-     */
-    public <T> T callback(String url, MultiValueMap<String, Object> paramMap, Class<T> responseClazz) {
-        try {
-            // 手动导入的话费单没有回调地址,无需回调
-            if (StringUtils.isBlank(url)) {
-               log.info("callback url is null paramMap={}", paramMap);
-               return responseClazz.newInstance();
-            }
-            RequestEntity requestEntity = RequestEntity.post(null)
-                    .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                    .acceptCharset(StandardCharsets.UTF_8)
-                    .body(paramMap);
-            ResponseEntity<T> entity = restTemplateCallback.postForEntity(url, requestEntity, responseClazz);
-            if (!entity.getStatusCode().is2xxSuccessful()) {
-                throw new HttpException(String.join("|").join("http status exection","req" , JsonUtils.toJSONString(paramMap), "res", JsonUtils.toJSONString(entity)));
-            }
-            return entity.getBody();
-        } catch (Exception e) {
-            throw new HttpException("callback exception " + JsonUtils.toJSONString(paramMap), e);
         }
     }
 }
