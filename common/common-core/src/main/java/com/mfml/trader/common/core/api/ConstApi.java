@@ -15,4 +15,10 @@ public class ConstApi {
      * 获取历史开盘价、收盘价等历史数据
      */
     public static String dongCaiApi = "https://push2his.eastmoney.com/api/qt/stock/kline/get";
+
+    /**
+     * 量化股票接口
+     * https://stockapi.com.cn/#/nineTrun
+     */
+    public static String stockApi = "https://stockapi.com.cn/v1/quota/nineTurn?code=[stockCode]&date=[date]";
 }
