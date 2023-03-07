@@ -19,6 +19,16 @@ public class VOL extends AbstractIndicator {
     @Resource
     Indicator indicator;
 
+    public static final String volume = "volume";
+    public static final String open = "open";
+    public static final String high = "high";
+    public static final String low = "low";
+    public static final String close = "close";
+    public static final String chg = "chg";
+    public static final String percent = "percent";
+    public static final String turnoverrate = "turnoverrate";
+    public static final String amount = "amount";
+
     /**
      *  获取成交量、成交额、开盘、收盘、换手率等指标
      *   timestamp: 时间戳，单位毫秒

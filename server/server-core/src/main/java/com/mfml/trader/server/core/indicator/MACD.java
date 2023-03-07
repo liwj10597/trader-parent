@@ -20,6 +20,9 @@ public class MACD extends AbstractIndicator {
     @Resource
     Indicator indicator;
 
+    public static final String dea = "dea";
+    public static final String dif = "dif";
+    public static final String macd = "macd";
 
     /**
      * macd指标获取接口

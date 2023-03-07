@@ -18,6 +18,10 @@ import javax.annotation.Resource;
 public class BOLL extends AbstractIndicator {
     @Resource
     Indicator indicator;
+
+    public static final String ub = "ub";
+    public static final String lb = "lb";
+    public static final String ma20 = "ma20";
     /**
      * 获取boll通道指标
      * ub：boll线上轨

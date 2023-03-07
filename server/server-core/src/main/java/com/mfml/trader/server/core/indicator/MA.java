@@ -19,6 +19,11 @@ public class MA extends AbstractIndicator {
     @Resource
     Indicator indicator;
 
+    public static final String ma5 = "ma5";
+    public static final String ma10 = "ma10";
+    public static final String ma20 = "ma20";
+    public static final String ma30 = "ma30";
+
     /**
      * 获取均线指标
      * timestamp: 时间戳 单位毫秒

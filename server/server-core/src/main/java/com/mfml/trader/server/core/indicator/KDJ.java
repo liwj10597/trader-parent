@@ -19,6 +19,10 @@ public class KDJ extends AbstractIndicator {
     @Resource
     Indicator indicator;
 
+    public static final String kdjk = "kdjk";
+    public static final String kdjd = "kdjd";
+    public static final String kdjj = "kdjj";
+
     /**
      * 获取boll通道指标
      * kdjk：k 中线
