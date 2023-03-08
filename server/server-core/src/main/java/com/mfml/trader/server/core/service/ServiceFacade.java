@@ -1,11 +1,11 @@
-package com.mfml.trader.server.core.strategy;
+package com.mfml.trader.server.core.service;
 
 /**
  * 策略管理
  * @author caozhou
  * @date 2023-02-28 22:43
  */
-public interface StrategyFacade {
+public interface ServiceFacade {
     /**
      * 买入
      * @param date 日期，主要用于回测

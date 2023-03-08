@@ -1,4 +1,4 @@
-package com.mfml.trader.server.core.strategy;
+package com.mfml.trader.server.core.service.strategy;
 
 import com.mfml.trader.common.core.enums.Period;
 import com.mfml.trader.common.core.enums.Recovery;
@@ -7,18 +7,20 @@ import com.mfml.trader.server.core.indicator.MA;
 import com.mfml.trader.server.core.indicator.MACD;
 import com.mfml.trader.server.core.indicator.VOL;
 import com.mfml.trader.server.core.indicator.base.AbstractIndicator;
+import com.mfml.trader.server.core.service.strategy.base.BaseStrategy;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
+
 import javax.annotation.Resource;
 import java.util.List;
 
 /**
  * @author caozhou
- * @date 2023-02-28 22:43
+ * @date 2023-03-07 14:48
  */
 @Slf4j
-@Service
-public class StrategyFacadeImpl implements StrategyFacade {
+@Component
+public class BaseMAStrategy implements BaseStrategy {
     @Resource
     private MACD macd;
     @Resource
@@ -28,7 +30,6 @@ public class StrategyFacadeImpl implements StrategyFacade {
     @Resource
     private BOLL boll;
 
-    @Override
     public void buy(String date, String stockCode, Integer amount) {
         log.info("buy date={}", date);
         AbstractIndicator.Result ma = this.ma.ma(stockCode, date, Period.day.code, Recovery.before.code, -5);

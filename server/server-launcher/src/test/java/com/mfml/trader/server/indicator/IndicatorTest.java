@@ -2,13 +2,12 @@ package com.mfml.trader.server.indicator;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import com.alibaba.fastjson.JSON;
 import com.mfml.trader.server.BaseTest;
 import com.mfml.trader.server.core.indicator.base.AbstractIndicator;
 import com.mfml.trader.server.core.indicator.BOLL;
 import com.mfml.trader.server.core.indicator.execute.Indicator;
 import com.mfml.trader.server.core.indicator.MACD;
-import com.mfml.trader.server.core.strategy.StrategyFacade;
+import com.mfml.trader.server.core.service.ServiceFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -32,20 +31,24 @@ public class IndicatorTest extends BaseTest {
     @Resource
     BOLL boll;
     @Resource
-    StrategyFacade strategyFacade;
+    ServiceFacade serviceFacade;
 
     @Test
     public void testStrategy() {
-        for (int i = 730; i > 0; i--) {
+
+        String format = "2021-10-29";
+        serviceFacade.buy(format, "600570", 200);
+
+        /*for (int i = 500; i > 0; i--) {
             try {
                 Date date = DateUtil.offsetDay(new Date(), -i).toJdkDate();
                 String format = DateUtil.format(date, DatePattern.NORM_DATE_PATTERN);
-                strategyFacade.buy(format, "600570", 200);
+                serviceFacade.buy(format, "600570", 200);
                 Thread.sleep(200);
             } catch (Exception e) {
                 log.warn("", e);
             }
-        }
+        }*/
     }
 
     @Test
