@@ -47,46 +47,56 @@ public class BaseBOLLStrategy implements BaseStrategy {
         List<String> percentList = volume.getList(VOL.percent);
         List<String> lowList = volume.getList(VOL.low);
 
-        // 1.近3天 boll中轨走平
+        AbstractIndicator.Result ma = this.ma.ma(stockCode, date, Period.day.code, Recovery.before.code, -count);
+        List<String> ma5List = ma.getList(MA.ma5);
+        // 0.近3天 boll中轨走平
         /*Double k = Regression.linearFit(Regression.linearScatters(ma20List));
         if (k < -1.0) {
             log.info("buy date={}, 近{}天boll中轨拟合斜率{}，不符买入条件", date, count, k);
             return ;
         }*/
 
-        // 2.当日收盘价乖离率 > 0.02 (2%)，表示远离boll线下轨
-        Double close = Double.valueOf(clostList.get(clostList.size() - 1));
-        Double lb = Double.valueOf(lbList.get(lbList.size() - 1));
+        // 1.当日收盘站上5日均线
+        Double c = Double.valueOf(clostList.get(clostList.size() - 1));
+        Double ma5 = Double.valueOf(ma5List.get(ma5List.size() - 1));
+        if (c <= ma5) {
+            //log.info("buy date={}, 突破后股价未站上5日均线，不符买入条件", date);
+            return ;
+        }
+
+        // 2.T-1日收盘价乖离率 > 0.02 (2%)，表示远离boll线下轨
+        Double close = Double.valueOf(clostList.get(clostList.size() - 2));
+        Double lb = Double.valueOf(lbList.get(lbList.size() - 2));
         double bias = Bias.bias(close, lb);
         if (bias < 0.02) {
             //log.info("buy date={}, 当日收盘价乖离率bias={}，不符买入条件", date, bias);
             return ;
         }
 
-        // 3.当日涨了2个点以上
-        Double percent = Double.valueOf(percentList.get(percentList.size() - 1));
+        // 3.T-1日涨了2个点以上
+        Double percent = Double.valueOf(percentList.get(percentList.size() - 2));
         if (percent < 2) {
             //log.info("buy date={}, 涨跌幅percent={}，不符买入条件", date, percent);
             return ;
         }
 
-        // 4.当日收真阳线
-        Double open = Double.valueOf(openList.get(openList.size() - 1));
+        // 4.T-1日收真阳线
+        Double open = Double.valueOf(openList.get(openList.size() - 2));
         Double p = close - open;
         if (p < 0) {
             //log.info("buy date={}, 当日收假阳线，不符买入条件");
             return ;
         }
 
-        // 5.开盘价、收盘价均在boll下轨之上
+        // 5.T-1日开盘价、收盘价均在boll下轨之上
         if (open < lb || close < lb) {
             //log.info("buy date={}, 开盘价或收盘价在boll下轨之下，不符买入条件");
             return;
         }
 
-        // 前一日最低价位于boll下轨附近
-        Double low_1 = Double.valueOf(lowList.get(lowList.size() - 2));
-        Double lb_1 = Double.valueOf(lbList.get(lbList.size() - 2));
+        // T-2日最低价位于boll下轨附近
+        Double low_1 = Double.valueOf(lowList.get(lowList.size() - 3));
+        Double lb_1 = Double.valueOf(lbList.get(lbList.size() - 3));
         double bias1 = Bias.bias(low_1, lb_1);
         if (bias1 > 0.01) {
             //log.info("buy date={}, 上交易日最低价与boll下轨乖离率bias1={}，不符买入条件", date, bias1);
