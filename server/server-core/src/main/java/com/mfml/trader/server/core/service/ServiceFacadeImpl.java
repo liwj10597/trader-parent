@@ -20,7 +20,6 @@ public class ServiceFacadeImpl implements ServiceFacade {
 
     @Override
     public void buy(String date, String stockCode, Integer amount) {
-        //baseMAStrategy.buy(date, stockCode, amount);
      baseBOLLStrategy.buy(date, stockCode, amount);
     }
 
