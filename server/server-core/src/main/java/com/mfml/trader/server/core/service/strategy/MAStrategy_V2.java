@@ -16,11 +16,11 @@ import java.util.List;
 
 /**
  * @author caozhou
- * @date 2023-03-07 14:48
+ * @date 2023-03-10 22:00
  */
 @Slf4j
 @Component
-public class MAStrategy implements BaseStrategy {
+public class MAStrategy_V2 implements BaseStrategy {
     @Resource
     private MACD macd;
     @Resource
@@ -29,51 +29,44 @@ public class MAStrategy implements BaseStrategy {
     private VOL vol;
     @Resource
     private BOLL boll;
-
+    @Override
     public void buy(String date, String stockCode, Integer amount) {
+
         AbstractIndicator.Result ma = this.ma.ma(stockCode, date, Period.day.code, Recovery.before.code, -5);
         AbstractIndicator.Result vol = this.vol.volume(stockCode, date, Period.day.code, Recovery.before.code, -5);
 
         List<String> ma5List = ma.getList(MA.ma5);
-        Double ma5 = Double.valueOf(ma5List.get(ma5List.size() - 1));
-        Double ma5_1 = Double.valueOf(ma5List.get(ma5List.size() - 2));
-        Double ma5_2 = Double.valueOf(ma5List.get(ma5List.size() - 3));
+        Integer ma5Idx = ma5List.size() - 1;
+        Double ma5_0 = Double.valueOf(ma5List.get(ma5Idx));
+        Double ma5_1 = Double.valueOf(ma5List.get(ma5Idx - 1));
 
         List<String> ma10List = ma.getList(MA.ma10);
-        Double ma10 = Double.valueOf(ma10List.get(ma10List.size() - 1));
-        Double ma10_1 = Double.valueOf(ma10List.get(ma10List.size() - 2));
+        Integer ma10Idx = ma10List.size() - 1;
+        Double ma10_0 = Double.valueOf(ma10List.get(ma10Idx));
+        Double ma10_1 = Double.valueOf(ma10List.get(ma10Idx - 1));
 
 
-        // 当日五日线 > 十日线  昨日 五日线 < 十日线
-        Double ma5_dif_ma10 = ma5 - ma10;
-        Double ma5_1_dif_ma10_1 = ma5_1 - ma10_1;
-        if (ma5_dif_ma10 <= 0 || ma5_1_dif_ma10_1 >= 0) {
+        // T日 ma5>ma10; T-1日 ma5<ma10
+        Double ma_diff_0 = ma5_0 - ma10_0;
+        Double ma_diff_1 = ma5_1 - ma10_1;
+        if (ma_diff_0 < 0 || ma_diff_1 >= 0) {
             return ;
         }
 
-        // 近3日五日线多头排列
-        Double ma5_dif_1 = ma5 - ma5_1;
-        Double ma5_dif_2 = ma5_1 - ma5_2;
-        if (ma5_dif_1 < 0 || ma5_dif_2 < 0) {
+        // T日 close>ma5
+        List<String> closeList = vol.getList(VOL.close);
+        Integer closeIdx = closeList.size() - 1;
+        Double close_0 = Double.valueOf(closeList.get(closeIdx));
+        if (close_0 < ma5_0) {
+            return ;
+        }
+        // T-1日 close>ma5
+        Double close_1 = Double.valueOf(closeList.get(closeIdx - 1));
+        if (close_1 < ma5_1) {
             return ;
         }
 
-        // 近2日十日线多头排列
-        Double ma10_dif_1 = ma10 - ma10_1;
-        if (ma10_dif_1 < 0) {
-            return ;
-        }
-
-        // 当日收涨
-        List<String> klineList = vol.getList(VOL.percent);
-        String percent = klineList.get(klineList.size() - 1);
-        Double percentD = Double.valueOf(percent);
-        if (percentD < 0) {
-            return ;
-        }
-
-        // 买入当日乖离率不能过高
-        log.info("date={}, stockCode={}", date, stockCode);
+        System.out.println(date + "," + stockCode);
     }
 
     @Override

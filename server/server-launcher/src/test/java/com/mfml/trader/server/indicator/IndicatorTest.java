@@ -44,7 +44,7 @@ public class IndicatorTest extends BaseTest {
                 Date date = DateUtil.offsetDay(new Date(), -i).toJdkDate();
                 String format = DateUtil.format(date, DatePattern.NORM_DATE_PATTERN);
                 serviceFacade.buy(format, "600570", 200);
-                Thread.sleep(50);
+                Thread.sleep(10);
             } catch (Exception e) {
                 log.warn("", e);
             }
