@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class BaseBOLLStrategy implements BaseStrategy {
+public class BOLLStrategy implements BaseStrategy {
     @Resource
     private MACD macd;
     @Resource

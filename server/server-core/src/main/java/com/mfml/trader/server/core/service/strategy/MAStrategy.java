@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class BaseMAStrategy implements BaseStrategy {
+public class MAStrategy implements BaseStrategy {
     @Resource
     private MACD macd;
     @Resource

@@ -2,8 +2,8 @@ package com.mfml.trader.server.core.service;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import com.mfml.trader.server.core.service.strategy.BaseBOLLStrategy;
-import com.mfml.trader.server.core.service.strategy.BaseMAStrategy;
+import com.mfml.trader.server.core.service.strategy.BOLLStrategy;
+import com.mfml.trader.server.core.service.strategy.MAStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
@@ -18,9 +18,9 @@ import java.util.Date;
 @Service
 public class ServiceFacadeImpl implements ServiceFacade {
    @Resource
-    BaseMAStrategy baseMAStrategy;
+   MAStrategy baseMAStrategy;
    @Resource
- BaseBOLLStrategy baseBOLLStrategy;
+   BOLLStrategy baseBOLLStrategy;
 
     @Override
     public void buy(String date, String stockCode, Integer amount) {
