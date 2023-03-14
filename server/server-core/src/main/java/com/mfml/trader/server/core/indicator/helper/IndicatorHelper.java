@@ -1,5 +1,7 @@
 package com.mfml.trader.server.core.indicator.helper;
 
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Charsets;
@@ -38,8 +40,8 @@ public class IndicatorHelper {
      * 频次 50次/分
      *
      * @param exchange 交易市场  SSE上交所,SZSE深交所,CFFEX 中金所,SHFE 上期所,CZCE 郑商所,DCE 大商所,INE 上能源
-     * @param start 开始日期 yyyyMMdd
-     * @param end 结束日期 yyyyMMdd
+     * @param start 开始日期 yyyy-MM-dd
+     * @param end 结束日期 yyyy-MM-dd
      * @return
      */
     public List<String> trade_cal(String exchange, String start, String end) {
@@ -48,8 +50,9 @@ public class IndicatorHelper {
         body.put("token", tushareToken);
         Map<String, Object> params = Maps.newHashMap();
         params.put("exchange", exchange);
-        params.put("start_date", start);
-        params.put("end_date", end);
+
+        params.put("start_date", DateUtil.format(DateUtil.parse(start, DatePattern.NORM_DATE_PATTERN).toJdkDate(), DatePattern.PURE_DATE_PATTERN));
+        params.put("end_date", DateUtil.format(DateUtil.parse(end, DatePattern.NORM_DATE_PATTERN).toJdkDate(), DatePattern.PURE_DATE_PATTERN));
         params.put("is_open", "1");
         body.put("params", params);
         body.put("fields", "cal_date");
@@ -63,7 +66,7 @@ public class IndicatorHelper {
         List<String> rest = Lists.newArrayList();
         for (int idx = 0; idx < jsonArray.size(); idx++) {
             JSONArray array = jsonArray.getJSONArray(idx);
-            rest.add(array.getString(0));
+            rest.add(DateUtil.format(DateUtil.parse(array.getString(0), DatePattern.PURE_DATE_PATTERN).toJdkDate(), DatePattern.NORM_DATE_PATTERN));
         }
         // 从过去到未来排序
         Collections.reverse(rest);
