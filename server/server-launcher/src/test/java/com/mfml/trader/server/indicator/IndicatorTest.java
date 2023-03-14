@@ -43,13 +43,12 @@ public class IndicatorTest extends BaseTest {
         /*String format = "2021-12-03";
         serviceFacade.buy(format, "600570", 200);*/
 
-        List<String> tradeDays = indicatorHelper.trade_cal("SSE", "20210202", "20230314");
+        List<String> tradeDays = indicatorHelper.trade_cal("SSE", "20210422", "20230422");
 
         for (String tradeDay : tradeDays) {
             try {
                 String format = DateUtil.format(DateUtil.parse(tradeDay, DatePattern.PURE_DATE_PATTERN).toJdkDate(), DatePattern.NORM_DATE_PATTERN);
-                serviceFacade.buy(format, "300341", 200);
-                Thread.sleep(10);
+                serviceFacade.buy(format, "002236", 200);
             } catch (Exception e) {
                 log.warn("", e);
             }

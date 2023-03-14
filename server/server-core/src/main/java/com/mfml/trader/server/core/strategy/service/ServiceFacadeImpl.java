@@ -35,9 +35,6 @@ public class ServiceFacadeImpl implements ServiceFacade {
             return ;
         }
 
-        //maStrategy.buy(date, stockCode, amount);
-        //bollStrategy.buy(date, stockCode, amount);
-
         maStrategyV2.buy(date, stockCode, amount);
     }
 
