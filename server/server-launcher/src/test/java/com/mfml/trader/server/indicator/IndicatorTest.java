@@ -36,14 +36,14 @@ public class IndicatorTest extends BaseTest {
     @Test
     public void testStrategy() {
 
-        /*String format = "2023-03-05";
-        serviceFacade.buy(format, "600519", 200);*/
+        /*String format = "2021-12-03";
+        serviceFacade.buy(format, "600570", 200);*/
 
         for (int i = 750; i > 0; i--) {
             try {
                 Date date = DateUtil.offsetDay(new Date(), -i).toJdkDate();
                 String format = DateUtil.format(date, DatePattern.NORM_DATE_PATTERN);
-                serviceFacade.buy(format, "600570", 200);
+                serviceFacade.buy(format, "300341", 200);
                 Thread.sleep(10);
             } catch (Exception e) {
                 log.warn("", e);
