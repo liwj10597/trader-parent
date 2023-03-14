@@ -1,4 +1,4 @@
-package com.mfml.trader.server.core.service.strategy.base;
+package com.mfml.trader.server.core.strategy.strategy.base;
 
 /**
  * @author caozhou

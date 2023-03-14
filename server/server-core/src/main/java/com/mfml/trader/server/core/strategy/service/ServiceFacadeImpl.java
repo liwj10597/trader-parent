@@ -1,10 +1,10 @@
-package com.mfml.trader.server.core.service;
+package com.mfml.trader.server.core.strategy.service;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import com.mfml.trader.server.core.service.strategy.BOLLStrategy;
-import com.mfml.trader.server.core.service.strategy.MAStrategy;
-import com.mfml.trader.server.core.service.strategy.MAStrategy_V2;
+import com.mfml.trader.server.core.strategy.strategy.BOLLStrategy;
+import com.mfml.trader.server.core.strategy.strategy.MAStrategy;
+import com.mfml.trader.server.core.strategy.strategy.MAStrategy_V2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;

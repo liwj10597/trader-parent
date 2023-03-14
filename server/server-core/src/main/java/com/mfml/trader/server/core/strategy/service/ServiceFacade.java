@@ -1,4 +1,4 @@
-package com.mfml.trader.server.core.service;
+package com.mfml.trader.server.core.strategy.service;
 
 /**
  * 策略管理

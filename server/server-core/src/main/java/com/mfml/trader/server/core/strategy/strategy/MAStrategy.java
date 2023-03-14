@@ -1,4 +1,4 @@
-package com.mfml.trader.server.core.service.strategy;
+package com.mfml.trader.server.core.strategy.strategy;
 
 import com.mfml.trader.common.core.enums.Period;
 import com.mfml.trader.common.core.enums.Recovery;
@@ -7,7 +7,7 @@ import com.mfml.trader.server.core.indicator.MA;
 import com.mfml.trader.server.core.indicator.MACD;
 import com.mfml.trader.server.core.indicator.VOL;
 import com.mfml.trader.server.core.indicator.base.AbstractIndicator;
-import com.mfml.trader.server.core.service.strategy.base.BaseStrategy;
+import com.mfml.trader.server.core.strategy.strategy.base.BaseStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

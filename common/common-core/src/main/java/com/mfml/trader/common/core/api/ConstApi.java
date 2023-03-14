@@ -21,4 +21,9 @@ public class ConstApi {
      * https://stockapi.com.cn/#/nineTrun
      */
     public static String stockApi = "https://stockapi.com.cn/v1/quota/nineTurn?code=[stockCode]&date=[date]";
+
+    /**
+     * 挖地兔
+     */
+    public static String tushareApi = "http://api.tushare.pro";
 }

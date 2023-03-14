@@ -7,13 +7,15 @@ import com.mfml.trader.server.core.indicator.base.AbstractIndicator;
 import com.mfml.trader.server.core.indicator.BOLL;
 import com.mfml.trader.server.core.indicator.execute.Indicator;
 import com.mfml.trader.server.core.indicator.MACD;
-import com.mfml.trader.server.core.service.ServiceFacade;
+import com.mfml.trader.server.core.indicator.helper.IndicatorHelper;
+import com.mfml.trader.server.core.strategy.service.ServiceFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -32,6 +34,8 @@ public class IndicatorTest extends BaseTest {
     BOLL boll;
     @Resource
     ServiceFacade serviceFacade;
+    @Resource
+    IndicatorHelper indicatorHelper;
 
     @Test
     public void testStrategy() {
@@ -39,16 +43,23 @@ public class IndicatorTest extends BaseTest {
         /*String format = "2021-12-03";
         serviceFacade.buy(format, "600570", 200);*/
 
-        for (int i = 750; i > 0; i--) {
+        List<String> tradeDays = indicatorHelper.trade_cal("SSE", "20210202", "20230314");
+
+        for (String tradeDay : tradeDays) {
             try {
-                Date date = DateUtil.offsetDay(new Date(), -i).toJdkDate();
-                String format = DateUtil.format(date, DatePattern.NORM_DATE_PATTERN);
+                String format = DateUtil.format(DateUtil.parse(tradeDay, DatePattern.PURE_DATE_PATTERN).toJdkDate(), DatePattern.NORM_DATE_PATTERN);
                 serviceFacade.buy(format, "300341", 200);
                 Thread.sleep(10);
             } catch (Exception e) {
                 log.warn("", e);
             }
         }
+    }
+
+    @Test
+    public void testTradeCal() {
+        List<String> s = indicatorHelper.trade_cal("SSE", "20210202", "20230314");
+        System.out.println(s);
     }
 
     @Test

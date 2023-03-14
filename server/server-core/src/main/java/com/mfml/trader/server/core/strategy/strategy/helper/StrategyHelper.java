@@ -1,17 +1,15 @@
-package com.mfml.trader.server.core.service.strategy.helper;
+package com.mfml.trader.server.core.strategy.strategy.helper;
 
 import com.mfml.trader.server.core.indicator.MA;
 import com.mfml.trader.server.core.indicator.VOL;
 import com.mfml.trader.server.core.indicator.base.AbstractIndicator;
-
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * @author caozhou
  * @date 2023-03-13 10:45
  */
-public class Helper {
+public class StrategyHelper {
 
     /**
      * 基础条件
@@ -84,7 +82,7 @@ public class Helper {
      * 好
      */
     public static boolean well(AbstractIndicator.Result ma, AbstractIndicator.Result vol) {
-        if (Helper.basic(ma, vol) && !Helper.perfect(ma, vol)) {
+        if (StrategyHelper.basic(ma, vol) && !StrategyHelper.perfect(ma, vol)) {
             return true;
         }
         return false;
@@ -128,9 +126,5 @@ public class Helper {
         } else {
             return false;
         }
-    }
-
-    public static Double bias(Double before, Double after) {
-        return BigDecimal.valueOf(before).subtract(BigDecimal.valueOf(after)).divide(BigDecimal.valueOf(after), 3, BigDecimal.ROUND_HALF_UP).doubleValue();
     }
 }

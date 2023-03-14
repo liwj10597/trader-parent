@@ -1,16 +1,17 @@
-package com.mfml.trader.server.core.service.strategy;
+package com.mfml.trader.server.core.strategy.strategy;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.mfml.trader.common.core.enums.Period;
 import com.mfml.trader.common.core.enums.Recovery;
+import com.mfml.trader.common.core.regression.Bias;
 import com.mfml.trader.server.core.indicator.BOLL;
 import com.mfml.trader.server.core.indicator.MA;
 import com.mfml.trader.server.core.indicator.MACD;
 import com.mfml.trader.server.core.indicator.VOL;
 import com.mfml.trader.server.core.indicator.base.AbstractIndicator;
-import com.mfml.trader.server.core.service.strategy.base.BaseStrategy;
-import com.mfml.trader.server.core.service.strategy.helper.Helper;
+import com.mfml.trader.server.core.strategy.strategy.base.BaseStrategy;
+import com.mfml.trader.server.core.strategy.strategy.helper.StrategyHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -47,9 +48,9 @@ public class MAStrategy_V2 implements BaseStrategy {
         List<String> percentList = vol.getList(VOL.percent);
         Integer percentIdx = percentList.size() - 1;
         Double percent_0 = Double.valueOf(percentList.get(percentIdx));
-        Double bias = Helper.bias(close_0, ma5_0);
+        Double bias = Bias.bias(close_0, ma5_0);
 
-        if (Helper.basic(ma, vol) && Helper.perfect(ma, vol) && bias <= 0.1) {
+        if (StrategyHelper.basic(ma, vol) && StrategyHelper.perfect(ma, vol) && bias <= 0.1) {
             System.out.println(String.join(",", date, stockCode, "perfect"));
             return;
         }
@@ -58,12 +59,12 @@ public class MAStrategy_V2 implements BaseStrategy {
         AbstractIndicator.Result ma_1 = this.ma.ma(stockCode, beforeDate, Period.day.code, Recovery.before.code, -5);
         AbstractIndicator.Result vol_1 = this.vol.volume(stockCode, beforeDate, Period.day.code, Recovery.before.code, -5);
 
-        if (Helper.well(ma_1, vol_1) && close_0 > ma5_0 && bias <= 0.1) {
+        if (StrategyHelper.well(ma_1, vol_1) && close_0 > ma5_0 && bias <= 0.1) {
             System.out.println(String.join(",", date, stockCode, "well"));
             return;
         }
 
-        if (Helper.ok(ma_1, vol_1) && close_0 > ma5_0 && percent_0 > 0 && bias <= 0.1) {
+        if (StrategyHelper.ok(ma_1, vol_1) && close_0 > ma5_0 && percent_0 > 0 && bias <= 0.1) {
             System.out.println(String.join(",", date, stockCode, "ok"));;
             return;
         }

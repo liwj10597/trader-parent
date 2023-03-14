@@ -1,21 +1,18 @@
-package com.mfml.trader.server.core.service.strategy;
+package com.mfml.trader.server.core.strategy.strategy;
 
 import com.mfml.trader.common.core.enums.Period;
 import com.mfml.trader.common.core.enums.Recovery;
 import com.mfml.trader.common.core.regression.Bias;
-import com.mfml.trader.common.core.regression.Regression;
 import com.mfml.trader.server.core.indicator.BOLL;
 import com.mfml.trader.server.core.indicator.MA;
 import com.mfml.trader.server.core.indicator.MACD;
 import com.mfml.trader.server.core.indicator.VOL;
 import com.mfml.trader.server.core.indicator.base.AbstractIndicator;
-import com.mfml.trader.server.core.service.strategy.base.BaseStrategy;
+import com.mfml.trader.server.core.strategy.strategy.base.BaseStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
 
 /**
