@@ -2,6 +2,7 @@ package com.mfml.trader.server.core.strategy.manage;
 
 import cn.hutool.core.util.RandomUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.google.common.collect.Sets;
 import com.mfml.trader.common.core.enums.Period;
 import com.mfml.trader.common.core.enums.Recovery;
 import com.mfml.trader.common.core.exception.TraderException;
@@ -23,6 +24,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author caozhou
@@ -53,6 +55,7 @@ public class ManageFacadeImpl implements ManageFacade {
     @Override
     public void manage(String date) {
         // 查持仓
+        Boolean holdPosition = false;
         List<StocksDo> stocks = stocksMapper.selectList(new LambdaQueryWrapper<StocksDo>().eq(StocksDo::getDate, date));
         for (StocksDo sdo : stocks) {
             String stockCode = sdo.getStockCode();
@@ -71,14 +74,26 @@ public class ManageFacadeImpl implements ManageFacade {
                 AbstractIndicator.Result volume = this.vol.volume(stockCode, date, Period.day.code, Recovery.before.code, -1);
                 Double price = Double.valueOf(volume.getList(VOL.close).get(0));
                 sell(id, date, stockCode, stockAmount, price);
+            } else {
+                holdPosition = true;
             }
         }
 
         // 遍历股票
+
+        Set<String> traverseDone = Sets.newHashSet();
         List<String> stockCodes = StockCodeHelper.stockCode;
         for (int idx = 0; idx < stockCodes.size(); idx++) {
+            if (holdPosition) {
+                break;
+            }
             int randomInt = RandomUtil.randomInt(stockCodes.size());
             String stockCode = stockCodes.get(randomInt);
+            if (traverseDone.contains(stockCode)) {
+                continue;
+            }
+
+            traverseDone.add(stockCode);
             Boolean buyHit = maStrategyV2.buyHit(date, stockCode);
             if (buyHit) {
                 // 买入
@@ -91,6 +106,7 @@ public class ManageFacadeImpl implements ManageFacade {
                 int hands = BigDecimal.valueOf(fundsAmount).divide(BigDecimal.valueOf(price * 100),0, BigDecimal.ROUND_DOWN).intValue();
                 if (hands > 0)
                     buy(date, stockCode, hands * 100, price);
+                holdPosition = true;
             }
         }
     }

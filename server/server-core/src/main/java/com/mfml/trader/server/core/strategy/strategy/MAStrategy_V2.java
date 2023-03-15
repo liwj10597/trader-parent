@@ -40,6 +40,7 @@ public class MAStrategy_V2 implements BaseStrategy {
         AbstractIndicator.Result ma = this.ma.ma(stockCode, date, Period.day.code, Recovery.before.code, -5);
         AbstractIndicator.Result vol = this.vol.volume(stockCode, date, Period.day.code, Recovery.before.code, -5);
 
+        log.info("{},{},{}", date, stockCode, ma);
         List<String> ma5List = ma.getList(MA.ma5);
         Integer ma5Idx = ma5List.size() - 1;
         Double ma5_0 = Double.valueOf(ma5List.get(ma5Idx));

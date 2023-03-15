@@ -74,7 +74,7 @@ public class StrategyTest extends BaseTest {
             // 买卖操作
             String date = tradeDays.get(idx);
             serviceFacade.manage(date);
-
+            log.info("{} done", date);
             if (idx + 1 < tradeDays.size()) {
                 // 清算
                 liquidation(date, tradeDays.get(idx + 1));
