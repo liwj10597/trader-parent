@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.google.common.collect.Lists;
 import com.mfml.trader.server.BaseTest;
 import com.mfml.trader.server.core.indicator.helper.IndicatorHelper;
-import com.mfml.trader.server.core.strategy.service.ServiceFacade;
+import com.mfml.trader.server.core.strategy.manage.ManageFacade;
 import com.mfml.trader.server.dao.domain.FundsDo;
 import com.mfml.trader.server.dao.domain.StocksDo;
 import com.mfml.trader.server.dao.domain.TradeRecordDo;
@@ -38,7 +38,7 @@ public class StrategyTest extends BaseTest {
     @Resource
     TradeRecordMapper tradeRecordMapper;
     @Resource
-    ServiceFacade serviceFacade;
+    ManageFacade serviceFacade;
     @Resource
     IndicatorHelper indicatorHelper;
 
@@ -69,13 +69,11 @@ public class StrategyTest extends BaseTest {
      */
     @Test
     public void strategyTest() {
-        String stockCode = "002236";
-
         // 循环历史交易日
         for (int idx = 0; idx < tradeDays.size(); idx++) {
             // 买卖操作
             String date = tradeDays.get(idx);
-            serviceFacade.service(date, stockCode);
+            serviceFacade.manage(date);
 
             if (idx + 1 < tradeDays.size()) {
                 // 清算
@@ -106,6 +104,7 @@ public class StrategyTest extends BaseTest {
                 sdo.setStockAmount(stock.getStockAmount());
                 sdo.setCostPrice(stock.getCostPrice());
                 sdo.setDate(nextDate);
+                sdo.setBuyDate(stock.getBuyDate());
                 stocksMapper.insert(sdo);
             }
         }

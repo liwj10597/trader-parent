@@ -29,6 +29,11 @@ public class StocksDo extends BaseDo {
     private String date;
 
     /**
+     * 买入日期
+     */
+    private String buyDate;
+
+    /**
      * 股票代码,
      */
     private String stockCode;

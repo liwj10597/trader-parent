@@ -1,4 +1,4 @@
-package com.mfml.trader.server.core.indicator.others;
+package com.mfml.trader.server.core.indicator;
 
 
 import lombok.extern.slf4j.Slf4j;

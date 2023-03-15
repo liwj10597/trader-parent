@@ -78,7 +78,7 @@ public class MAStrategy implements BaseStrategy {
     }
 
     @Override
-    public Boolean sellHit() {
+    public Boolean sellHit(String date, String stockCode) {
         return false;
     }
 }

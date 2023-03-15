@@ -15,5 +15,5 @@ public interface BaseStrategy {
     /**
      * 卖出提示
      */
-    Boolean sellHit();
+    Boolean sellHit(String date, String stockCode);
 }
