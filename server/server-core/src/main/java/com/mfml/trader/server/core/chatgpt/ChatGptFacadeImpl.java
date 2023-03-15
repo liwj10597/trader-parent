@@ -72,7 +72,8 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         String json = restTemplate.postForObject(url, new HttpEntity<>(params, headers), String.class);
         JSONArray choices = JSON.parseObject(json).getJSONArray("choices");
         for (int idx = 0; idx < choices.size(); idx++) {
-            buffer.append(choices.getJSONObject(idx).getString("text"));
+            String line = choices.getJSONObject(idx).getString("text");
+            buffer.append(line.replaceAll("\n", ""));
         }
 
         return buffer.toString();
