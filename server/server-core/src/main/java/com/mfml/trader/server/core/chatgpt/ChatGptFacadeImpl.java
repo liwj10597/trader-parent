@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.mfml.trader.server.core.chatgpt.ro.AskRo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         params.put("temperature", 0);
 
         StringBuffer buffer = new StringBuffer();
-        String json = restTemplate.postForObject(url, params, String.class);
+        String json = restTemplate.postForObject(url, new HttpEntity<>(params, headers), String.class);
         JSONArray choices = JSON.parseObject(json).getJSONArray("choices");
         for (int idx = 0; idx < choices.size(); idx++) {
             buffer.append(choices.getJSONObject(idx).getString("text"));

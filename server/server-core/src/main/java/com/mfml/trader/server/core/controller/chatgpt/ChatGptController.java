@@ -1,6 +1,8 @@
 package com.mfml.trader.server.core.controller.chatgpt;
 
 import com.mfml.trader.common.core.annotation.ApiScan;
+import com.mfml.trader.common.core.result.Result;
+import com.mfml.trader.common.core.result.ResultUtil;
 import com.mfml.trader.server.core.chatgpt.ChatGptFacade;
 import com.mfml.trader.server.core.chatgpt.ro.AskRo;
 import io.swagger.annotations.ApiOperation;
@@ -23,7 +25,8 @@ public class ChatGptController {
 
     @ApiOperation(value = "ask", notes = "ask", tags = {"ChatGPT"})
     @PostMapping(value = "ask")
-    public String ask(AskRo ro) {
-        return chatGptFacade.ask(ro);
+    public Result<String> ask(AskRo ro) {
+        String ask = chatGptFacade.ask(ro);
+        return ResultUtil.success(ask);
     }
 }
