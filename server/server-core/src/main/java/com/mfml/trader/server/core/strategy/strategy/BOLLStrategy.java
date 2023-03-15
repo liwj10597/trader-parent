@@ -32,7 +32,7 @@ public class BOLLStrategy implements BaseStrategy {
     private BOLL boll;
 
     @Override
-    public void buy(String date, String stockCode, Integer amount) {
+    public Boolean buyHit(String date, String stockCode) {
         int count = 4;
         AbstractIndicator.Result boll = this.boll.boll(stockCode, date, Period.day.code, Recovery.before.code, -count);
         List<String> ma20List = boll.getList(BOLL.ma20);
@@ -58,7 +58,7 @@ public class BOLLStrategy implements BaseStrategy {
         Double ma5 = Double.valueOf(ma5List.get(ma5List.size() - 1));
         if (c <= ma5) {
             //log.info("buy date={}, 突破后股价未站上5日均线，不符买入条件", date);
-            return ;
+            return false;
         }
 
         // 2.T-1日收盘价乖离率 > 0.02 (2%)，表示远离boll线下轨
@@ -67,14 +67,14 @@ public class BOLLStrategy implements BaseStrategy {
         double bias = Bias.bias(close, lb);
         if (bias < 0.02) {
             //log.info("buy date={}, 当日收盘价乖离率bias={}，不符买入条件", date, bias);
-            return ;
+            return false;
         }
 
         // 3.T-1日涨了2个点以上
         Double percent = Double.valueOf(percentList.get(percentList.size() - 2));
         if (percent < 2) {
             //log.info("buy date={}, 涨跌幅percent={}，不符买入条件", date, percent);
-            return ;
+            return false;
         }
 
         // 4.T-1日收真阳线
@@ -82,13 +82,13 @@ public class BOLLStrategy implements BaseStrategy {
         Double p = close - open;
         if (p < 0) {
             //log.info("buy date={}, 当日收假阳线，不符买入条件");
-            return ;
+            return false;
         }
 
         // 5.T-1日开盘价、收盘价均在boll下轨之上
         if (open < lb || close < lb) {
             //log.info("buy date={}, 开盘价或收盘价在boll下轨之下，不符买入条件");
-            return;
+            return false;
         }
 
         // T-2日最低价位于boll下轨附近
@@ -97,14 +97,15 @@ public class BOLLStrategy implements BaseStrategy {
         double bias1 = Bias.bias(low_1, lb_1);
         if (bias1 > 0.01) {
             //log.info("buy date={}, 上交易日最低价与boll下轨乖离率bias1={}，不符买入条件", date, bias1);
-            return ;
+            return false;
         }
 
         log.info("ok date={}, stockCode={}", date, stockCode);
+        return true;
     }
 
     @Override
-    public void sell() {
-
+    public Boolean sellHit() {
+        return false;
     }
 }

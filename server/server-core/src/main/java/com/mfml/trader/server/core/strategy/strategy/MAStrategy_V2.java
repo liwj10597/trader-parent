@@ -34,7 +34,7 @@ public class MAStrategy_V2 implements BaseStrategy {
     @Resource
     private BOLL boll;
     @Override
-    public void buy(String date, String stockCode, Integer amount) {
+    public Boolean buyHit(String date, String stockCode) {
 
         AbstractIndicator.Result ma = this.ma.ma(stockCode, date, Period.day.code, Recovery.before.code, -5);
         AbstractIndicator.Result vol = this.vol.volume(stockCode, date, Period.day.code, Recovery.before.code, -5);
@@ -52,7 +52,7 @@ public class MAStrategy_V2 implements BaseStrategy {
 
         if (StrategyHelper.basic(ma, vol) && StrategyHelper.perfect(ma, vol) && bias <= 0.1) {
             System.out.println(String.join(",", date, stockCode, "perfect"));
-            return;
+            return true;
         }
 
         String beforeDate = DateUtil.format(DateUtil.offsetDay(DateUtil.parse(date, DatePattern.NORM_DATE_PATTERN).toJdkDate(), -1), DatePattern.NORM_DATE_PATTERN);
@@ -61,17 +61,18 @@ public class MAStrategy_V2 implements BaseStrategy {
 
         if (StrategyHelper.well(ma_1, vol_1) && close_0 > ma5_0 && bias <= 0.1) {
             System.out.println(String.join(",", date, stockCode, "well"));
-            return;
+            return true;
         }
 
         if (StrategyHelper.ok(ma_1, vol_1) && close_0 > ma5_0 && percent_0 > 0 && bias <= 0.1) {
             System.out.println(String.join(",", date, stockCode, "ok"));;
-            return;
+            return true;
         }
+        return false;
     }
 
     @Override
-    public void sell() {
-
+    public Boolean sellHit() {
+        return false;
     }
 }

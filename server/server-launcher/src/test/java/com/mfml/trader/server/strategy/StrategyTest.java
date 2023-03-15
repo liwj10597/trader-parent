@@ -1,7 +1,7 @@
 package com.mfml.trader.server.strategy;
 
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.google.common.collect.Lists;
 import com.mfml.trader.server.BaseTest;
@@ -21,6 +21,7 @@ import org.junit.runners.MethodSorters;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author caozhou
@@ -68,11 +69,44 @@ public class StrategyTest extends BaseTest {
      */
     @Test
     public void strategyTest() {
-        for (String tradeDay : tradeDays) {
-            try {
-                serviceFacade.buy(tradeDay, "002236", 100);
-            } catch (Exception e) {
-                log.warn("", e);
+        String stockCode = "002236";
+
+        // 循环历史交易日
+        for (int idx = 0; idx < tradeDays.size(); idx++) {
+            // 买卖操作
+            String date = tradeDays.get(idx);
+            serviceFacade.service(date, stockCode);
+
+            if (idx + 1 < tradeDays.size()) {
+                // 清算
+                liquidation(date, tradeDays.get(idx + 1));
+            }
+        }
+    }
+
+    /**
+     * 清算
+     * @param date
+     * @param nextDate
+     */
+    public void liquidation(String date, String nextDate) {
+        // 资金
+        FundsDo funds = fundsMapper.selectOne(new LambdaQueryWrapper<FundsDo>().eq(FundsDo::getDate, date));
+        funds = Optional.ofNullable(funds).orElse(new FundsDo());
+        FundsDo entity = new FundsDo();
+        entity.setDate(nextDate);
+        entity.setFundsAmount(funds.getFundsAmount());
+        fundsMapper.insert(entity);
+        // 持仓
+        List<StocksDo> stocks = stocksMapper.selectList(new LambdaQueryWrapper<StocksDo>().eq(StocksDo::getDate, date));
+        for (StocksDo stock : stocks) {
+            if (stock.getStockAmount()> 0) {
+                StocksDo sdo = new StocksDo();
+                sdo.setStockCode(stock.getStockCode());
+                sdo.setStockAmount(stock.getStockAmount());
+                sdo.setCostPrice(stock.getCostPrice());
+                sdo.setDate(nextDate);
+                stocksMapper.insert(sdo);
             }
         }
     }

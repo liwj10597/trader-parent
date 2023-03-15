@@ -6,15 +6,14 @@ package com.mfml.trader.server.core.strategy.strategy.base;
  */
 public interface BaseStrategy {
     /**
-     * 买入
+     * 买入提示
      * @param date 日期，主要用于回测
      * @param stockCode 正股代码
-     * @param amount 买入手数
      */
-    void buy(String date, String stockCode, Integer amount);
+    Boolean buyHit(String date, String stockCode);
 
     /**
-     * 卖出
+     * 卖出提示
      */
-    void sell();
+    Boolean sellHit();
 }

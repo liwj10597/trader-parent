@@ -30,7 +30,7 @@ public class MAStrategy implements BaseStrategy {
     @Resource
     private BOLL boll;
 
-    public void buy(String date, String stockCode, Integer amount) {
+    public Boolean buyHit(String date, String stockCode) {
         AbstractIndicator.Result ma = this.ma.ma(stockCode, date, Period.day.code, Recovery.before.code, -5);
         AbstractIndicator.Result vol = this.vol.volume(stockCode, date, Period.day.code, Recovery.before.code, -5);
 
@@ -48,20 +48,20 @@ public class MAStrategy implements BaseStrategy {
         Double ma5_dif_ma10 = ma5 - ma10;
         Double ma5_1_dif_ma10_1 = ma5_1 - ma10_1;
         if (ma5_dif_ma10 <= 0 || ma5_1_dif_ma10_1 >= 0) {
-            return ;
+            return false;
         }
 
         // 近3日五日线多头排列
         Double ma5_dif_1 = ma5 - ma5_1;
         Double ma5_dif_2 = ma5_1 - ma5_2;
         if (ma5_dif_1 < 0 || ma5_dif_2 < 0) {
-            return ;
+            return false;
         }
 
         // 近2日十日线多头排列
         Double ma10_dif_1 = ma10 - ma10_1;
         if (ma10_dif_1 < 0) {
-            return ;
+            return false;
         }
 
         // 当日收涨
@@ -69,15 +69,16 @@ public class MAStrategy implements BaseStrategy {
         String percent = klineList.get(klineList.size() - 1);
         Double percentD = Double.valueOf(percent);
         if (percentD < 0) {
-            return ;
+            return false;
         }
 
         // 买入当日乖离率不能过高
         log.info("date={}, stockCode={}", date, stockCode);
+        return true;
     }
 
     @Override
-    public void sell() {
-
+    public Boolean sellHit() {
+        return false;
     }
 }
