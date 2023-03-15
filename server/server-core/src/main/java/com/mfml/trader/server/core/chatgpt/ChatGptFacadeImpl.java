@@ -1,5 +1,7 @@
 package com.mfml.trader.server.core.chatgpt;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.mfml.trader.server.core.chatgpt.ro.AskRo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -23,6 +25,30 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
     public static final String url = "https://api.openai.com/v1/completions";
     public static final String accessToken = "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";
 
+    /**
+     * 请求结果示例
+     * {
+     *   "id": "cmpl-6uMBI8XuETmjgCfyOIG7AnkiNEUKp",
+     *   "object": "text_completion",
+     *   "created": 1678889652,
+     *   "model": "text-davinci-003",
+     *   "choices": [
+     *     {
+     *       "text": "\n\n我是一个学生。",
+     *       "index": 0,
+     *       "logprobs": null,
+     *       "finish_reason": "stop"
+     *     }
+     *   ],
+     *   "usage": {
+     *     "prompt_tokens": 9,
+     *     "completion_tokens": 12,
+     *     "total_tokens": 21
+     *   }
+     * }
+     * @param ro
+     * @return
+     */
     @Override
     public String ask(AskRo ro) {
 
@@ -35,6 +61,13 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         params.put("prompt", ro.getPrompt());
         params.put("max_tokens", 50);
         params.put("temperature", 0);
-        return restTemplate.postForObject(url, params, String.class);
+
+        StringBuffer buffer = new StringBuffer();
+        String json = restTemplate.postForObject(url, params, String.class);
+        JSONArray choices = JSON.parseObject(json).getJSONArray("choices");
+        for (int idx = 0; idx < choices.size(); idx++) {
+            buffer.append(choices.getJSONObject(idx).getString("text"));
+        }
+        return buffer.toString();
     }
 }
