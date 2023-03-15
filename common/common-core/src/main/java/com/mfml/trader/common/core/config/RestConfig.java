@@ -8,7 +8,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * 基于RestTemplate同步连接池客户端
@@ -72,6 +78,15 @@ public class RestConfig {
         RestTemplate restTemplate = new RestTemplate();
         // 配置请求工厂
         restTemplate.setRequestFactory(clientHttpRequestFactory);
+        List<HttpMessageConverter<?>> messageConverterList =  restTemplate.getMessageConverters();
+        Iterator<HttpMessageConverter<?>> iterator = messageConverterList.iterator();
+        while ( iterator.hasNext()){
+            HttpMessageConverter<?> converter = iterator.next();
+            if (converter instanceof StringHttpMessageConverter) {
+                ((StringHttpMessageConverter) converter).setDefaultCharset(StandardCharsets.UTF_8);
+                break;
+            }
+        }
         return restTemplate;
     }
 }
