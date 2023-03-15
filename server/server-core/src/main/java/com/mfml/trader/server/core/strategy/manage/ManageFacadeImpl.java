@@ -59,12 +59,13 @@ public class ManageFacadeImpl implements ManageFacade {
             Integer stockAmount = sdo.getStockAmount();
             Long id = sdo.getId();
             String buyDate = sdo.getBuyDate();
+            Double costPrice = sdo.getCostPrice();
 
             if (stockAmount <= 0) {
                 continue;
             }
 
-            Boolean sellHit = maStrategyV2.sellHit(date, stockCode);
+            Boolean sellHit = maStrategyV2.sellHit(date, stockCode, costPrice);
             if (sellHit && date.compareTo(buyDate) > 0) {
                 // 卖出
                 AbstractIndicator.Result volume = this.vol.volume(stockCode, date, Period.day.code, Recovery.before.code, -1);

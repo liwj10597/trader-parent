@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -72,7 +73,21 @@ public class MAStrategy_V2 implements BaseStrategy {
     }
 
     @Override
-    public Boolean sellHit(String date, String stockCode) {
+    public Boolean sellHit(String date, String stockCode, Double costPrice) {
+        AbstractIndicator.Result vol = this.vol.volume(stockCode, date, Period.day.code, Recovery.before.code, -1);
+        Double close = Double.valueOf(vol.getList(VOL.close).get(0));
+        Double percent = BigDecimal.valueOf(costPrice - close).divide(BigDecimal.valueOf(close), 2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        // 跌5个点，提示卖出
+        if (percent <= -0.05) {
+            return true;
+        }
+
+        AbstractIndicator.Result ma = this.ma.ma(stockCode, date, Period.day.code, Recovery.before.code, -1);
+        Double ma5 = Double.valueOf(ma.getList(MA.ma5).get(0));
+        // 跌破5日均线，提示卖出
+        if (close < ma5) {
+            return true;
+        }
         return false;
     }
 }
