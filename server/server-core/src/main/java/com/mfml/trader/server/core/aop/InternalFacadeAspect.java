@@ -21,7 +21,7 @@ import static com.mfml.trader.common.core.result.ResultUtil.fail;
 @Slf4j
 public class InternalFacadeAspect {
 
-    @Pointcut("execution(* com.mfml.trader.server.core.controller.internal..*Controller.*(..))")
+    @Pointcut("execution(* com.mfml.trader.server.core.controller.chatgpt..*Controller.*(..))")
     private void facadePointCut() {
     }
 

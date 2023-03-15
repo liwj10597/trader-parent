@@ -36,7 +36,7 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-            .title("蓝鲸低代码平台")
+            .title("ChatGPT代理平台")
             .version("1.0")
             .build();
     }
