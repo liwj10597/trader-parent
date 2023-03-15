@@ -28,7 +28,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization","Bearer " + accessToken);
+        headers.setBearerAuth(accessToken);
 
         HashMap<String, Object> params = new HashMap<>();
         params.put("model", ro.getModel());
