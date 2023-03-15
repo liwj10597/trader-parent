@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.mfml.trader.server.core.chatgpt.ro.AskRo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         headers.setBearerAuth(accessToken);
 
         HashMap<String, Object> params = new HashMap<>();
+        ro.setModel(StringUtils.isBlank(ro.getModel()) ? "text-davinci-003" : ro.getModel());
         params.put("model", ro.getModel());
         params.put("prompt", ro.getPrompt());
         params.put("max_tokens", 50);

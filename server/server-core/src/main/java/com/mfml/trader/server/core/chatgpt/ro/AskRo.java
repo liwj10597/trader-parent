@@ -9,8 +9,6 @@ import lombok.Data;
  */
 @Data
 public class AskRo extends ToString {
-
-    public String model;
-
     public String prompt;
+    public String model;
 }
