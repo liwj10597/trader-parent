@@ -36,19 +36,19 @@ STDOUT_FILE=${LOG_DIR}/${APP_NAME}-std.out
 GC_LOG_FILE=${LOG_DIR}/${APP_NAME}-gc.log
 DUMP_LOG_FILE=${LOG_DIR}/${APP_NAME}-dump.dump
 
-SERVER_PORT=8081
+SERVER_PORT=80
 PID=0
 CHECK_COUNT=0
 CHECK_LIMIT=100
 KILL_COUNT=0
 KILL_LIMIT=100
 
-JAVA_HOME="/root/develop/jdk1.8"
+JAVA_HOME="/home/work/develop/jdk1.8"
 # JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home"
 JAVA="${JAVA_HOME}/bin/java"
 
 # 设置JVM参数
-JAVA_OPTS="-Xss512k -XX:MetaspaceSize=512m -XX:MaxMetaspaceSize=512m -Xms6G -Xmx6G -XX:+UseG1GC"
+JAVA_OPTS="-Xss512k -XX:MetaspaceSize=512m -XX:MaxMetaspaceSize=512m -Xms2G -Xmx2G -XX:+UseG1GC"
 
 # 打印GC日志
 JAVA_OPTS="${JAVA_OPTS} -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintHeapAtGC -Xloggc:"${GC_LOG_FILE}
@@ -66,7 +66,7 @@ JAVA_OPTS="${JAVA_OPTS} -Djava.security.egd=file:/dev/./urandom -Djava.io.tmpdir
 JAVA_OPTS="${JAVA_OPTS} -Xdebug -Xrunjdwp:transport=dt_socket,address=8005,server=y,suspend=n"
 
 # 数据库参数
-SPRING_PARAM=" --spring.datasource.username=root --spring.datasource.password=qwas123!  --spring.datasource.ip=192.168.0.31:3316 "
+SPRING_PARAM=" --spring.datasource.username=root --spring.datasource.password=chatGPT123@  --spring.datasource.ip=localhost:3306 "
 
 ##################################################
 # 准备
