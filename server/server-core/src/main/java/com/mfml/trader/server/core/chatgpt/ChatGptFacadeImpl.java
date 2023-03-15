@@ -2,6 +2,8 @@ package com.mfml.trader.server.core.chatgpt;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.google.common.base.Charsets;
+import com.google.common.collect.Lists;
 import com.mfml.trader.server.core.chatgpt.ro.AskRo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +59,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(accessToken);
+        headers.setAcceptCharset(Lists.newArrayList(Charsets.UTF_8));
 
         HashMap<String, Object> params = new HashMap<>();
         ro.setModel(StringUtils.isBlank(ro.getModel()) ? "text-davinci-003" : ro.getModel());
@@ -71,6 +74,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         for (int idx = 0; idx < choices.size(); idx++) {
             buffer.append(choices.getJSONObject(idx).getString("text"));
         }
+
         return buffer.toString();
     }
 }
