@@ -29,6 +29,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
     RestTemplate restTemplate;
 
     public static final String url = "https://api.openai.com/v1/completions";
+    public static final String urlChat = "https://api.openai.com/v1/chat/completions";
     public static final String accessToken = "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";
 
     /**
@@ -126,7 +127,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         params.put("messages", messages);
 
         StringBuffer buffer = new StringBuffer();
-        String json = restTemplate.postForObject(url, new HttpEntity<>(params, headers), String.class);
+        String json = restTemplate.postForObject(urlChat, new HttpEntity<>(params, headers), String.class);
         JSONArray choices = JSON.parseObject(json).getJSONArray("choices");
         for (int idx = 0; idx < choices.size(); idx++) {
             String line = choices.getJSONObject(idx).getJSONObject("message").getString("content");
