@@ -29,4 +29,11 @@ public class ChatGptController {
         String ask = chatGptFacade.ask(ro);
         return ResultUtil.success(ask);
     }
+
+    @ApiOperation(value = "chatGPT", notes = "chatGPT", tags = {"ChatGPT"})
+    @PostMapping(value = "chatGPT")
+    public Result<String> chatGPT(AskRo ro) {
+        String chatGPT = chatGptFacade.chatGPT(ro);
+        return ResultUtil.success(chatGPT);
+    }
 }

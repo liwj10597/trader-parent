@@ -9,4 +9,6 @@ import com.mfml.trader.server.core.chatgpt.ro.AskRo;
 public interface ChatGptFacade {
 
     String ask(AskRo ro);
+
+    String chatGPT(AskRo ro);
 }
