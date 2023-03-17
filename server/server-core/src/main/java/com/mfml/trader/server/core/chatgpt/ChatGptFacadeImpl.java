@@ -30,7 +30,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
 
     public static final String url = "https://api.openai.com/v1/completions";
     public static final String urlChat = "https://api.openai.com/v1/chat/completions";
-    public static final String accessToken = "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";
+    public static final String accessToken = "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";
 
     /**
      * 请求结果示例
