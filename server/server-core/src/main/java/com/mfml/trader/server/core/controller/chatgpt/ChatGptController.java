@@ -4,12 +4,16 @@ import com.mfml.trader.common.core.annotation.ApiScan;
 import com.mfml.trader.common.core.result.Result;
 import com.mfml.trader.common.core.result.ResultUtil;
 import com.mfml.trader.server.core.chatgpt.ChatGptFacade;
+import com.mfml.trader.server.core.chatgpt.ChatGptFacadeImpl;
 import com.mfml.trader.server.core.chatgpt.ro.AskRo;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author caozhou
@@ -35,5 +39,28 @@ public class ChatGptController {
     public Result<String> chatGPT(AskRo ro) {
         String chatGPT = chatGptFacade.chatGPT(ro);
         return ResultUtil.success(chatGPT);
+    }
+
+    @ApiOperation(value = "addToken", notes = "addToken", tags = {"Console"})
+    @PostMapping(value = "addToken")
+    public Result<Boolean> addToken(@RequestParam(value = "key") String key) {
+        if (StringUtils.isBlank(key)) {
+            return ResultUtil.success(true);
+        }
+        ChatGptFacadeImpl.accessTokens.add(key);
+        return ResultUtil.success(true);
+    }
+
+    @ApiOperation(value = "getToken", notes = "getToken", tags = {"Console"})
+    @PostMapping(value = "getToken")
+    public Result<List<String>> getToken() {
+        return ResultUtil.success(ChatGptFacadeImpl.accessTokens);
+    }
+
+    @ApiOperation(value = "cleanToken", notes = "cleanToken", tags = {"Console"})
+    @PostMapping(value = "cleanToken")
+    public Result<Boolean> deleteToken(@RequestParam(value = "key") String key) {
+        ChatGptFacadeImpl.accessTokens.clear();
+        return ResultUtil.success(true);
     }
 }

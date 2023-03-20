@@ -1,5 +1,6 @@
 package com.mfml.trader.server.core.chatgpt;
 
+import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Charsets;
@@ -30,8 +31,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
 
     public static final String url = "https://api.openai.com/v1/completions";
     public static final String urlChat = "https://api.openai.com/v1/chat/completions";
-    public static final String accessToken = "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";
-
+    public static final List<String> accessTokens = Lists.newArrayList();
     /**
      * 请求结果示例
      * {
@@ -61,7 +61,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(accessToken);
+        headers.setBearerAuth(accessTokens.get(RandomUtil.randomInt(accessTokens.size())));
         headers.setAcceptCharset(Lists.newArrayList(Charsets.UTF_8));
 
         HashMap<String, Object> params = new HashMap<>();
@@ -112,7 +112,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
     public String chatGPT(AskRo ro) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(accessToken);
+        headers.setBearerAuth(accessTokens.get(RandomUtil.randomInt(accessTokens.size())));
         headers.setAcceptCharset(Lists.newArrayList(Charsets.UTF_8));
 
         HashMap<String, Object> params = new HashMap<>();
