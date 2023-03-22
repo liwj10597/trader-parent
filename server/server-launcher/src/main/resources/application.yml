@@ -1,6 +1,6 @@
 server:
   #端口号
-  port: 80
+  port: 8081
 
 # 健康检查
 management:
