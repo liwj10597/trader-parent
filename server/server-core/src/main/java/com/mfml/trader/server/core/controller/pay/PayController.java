@@ -27,7 +27,7 @@ public class PayController {
     @ApiOperation(value = "秘钥验证", notes = "秘钥验证", tags = {"Pay"})
     @PostMapping(value = "payValidation")
     @ResponseBody
-    public Result<Boolean> payValidation(PayValidationRo ro) {
+    public Result<Integer> payValidation(PayValidationRo ro) {
         return payFacade.payValidation(ro);
     }
 

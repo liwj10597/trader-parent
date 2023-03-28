@@ -27,13 +27,6 @@ public class ChatGptController {
     @Resource
     ChatGptFacade chatGptFacade;
 
-    @ApiOperation(value = "ask", notes = "ask", tags = {"ChatGPT"})
-    @PostMapping(value = "ask")
-    public Result<String> ask(AskRo ro) {
-        String ask = chatGptFacade.ask(ro);
-        return ResultUtil.success(ask);
-    }
-
     @ApiOperation(value = "chatGPT", notes = "chatGPT", tags = {"ChatGPT"})
     @PostMapping(value = "chatGPT")
     public Result<String> chatGPT(AskRo ro) {

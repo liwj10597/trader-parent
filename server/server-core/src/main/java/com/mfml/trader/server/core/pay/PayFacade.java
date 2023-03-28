@@ -17,7 +17,7 @@ public interface PayFacade {
      * @param ro
      * @return true 表示验证成功；false表示验证失败
      */
-    Result<Boolean> payValidation(PayValidationRo ro);
+    Result<Integer> payValidation(PayValidationRo ro);
 
     /**
      * 生成秘钥

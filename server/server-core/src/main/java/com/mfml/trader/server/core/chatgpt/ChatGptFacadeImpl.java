@@ -29,58 +29,9 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
     @Resource
     RestTemplate restTemplate;
 
-    public static final String url = "https://api.openai.com/v1/completions";
     public static final String urlChat = "https://api.openai.com/v1/chat/completions";
     public static final List<String> accessTokens = Lists.newArrayList();
-    /**
-     * 请求结果示例
-     * {
-     *   "id": "cmpl-6uMBI8XuETmjgCfyOIG7AnkiNEUKp",
-     *   "object": "text_completion",
-     *   "created": 1678889652,
-     *   "model": "text-davinci-003",
-     *   "choices": [
-     *     {
-     *       "text": "\n\n我是一个学生。",
-     *       "index": 0,
-     *       "logprobs": null,
-     *       "finish_reason": "stop"
-     *     }
-     *   ],
-     *   "usage": {
-     *     "prompt_tokens": 9,
-     *     "completion_tokens": 12,
-     *     "total_tokens": 21
-     *   }
-     * }
-     * @param ro
-     * @return
-     */
-    @Override
-    public String ask(AskRo ro) {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(accessTokens.get(RandomUtil.randomInt(accessTokens.size())));
-        headers.setAcceptCharset(Lists.newArrayList(Charsets.UTF_8));
-
-        HashMap<String, Object> params = new HashMap<>();
-        ro.setModel(StringUtils.isBlank(ro.getModel()) ? "text-davinci-003" : ro.getModel());
-        params.put("model", ro.getModel());
-        params.put("prompt", ro.getPrompt());
-        params.put("max_tokens", 50);
-        params.put("temperature", 0);
-
-        StringBuffer buffer = new StringBuffer();
-        String json = restTemplate.postForObject(url, new HttpEntity<>(params, headers), String.class);
-        JSONArray choices = JSON.parseObject(json).getJSONArray("choices");
-        for (int idx = 0; idx < choices.size(); idx++) {
-            String line = choices.getJSONObject(idx).getString("text");
-            buffer.append(line.replaceAll("\n", ""));
-        }
-
-        return buffer.toString();
-    }
 
     /**
      * 请求结果示例
