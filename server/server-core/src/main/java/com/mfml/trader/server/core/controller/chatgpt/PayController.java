@@ -1,4 +1,4 @@
-package com.mfml.trader.server.core.controller.pay;
+package com.mfml.trader.server.core.controller.chatgpt;
 
 import com.mfml.trader.common.core.annotation.ApiScan;
 import com.mfml.trader.common.core.result.Result;
