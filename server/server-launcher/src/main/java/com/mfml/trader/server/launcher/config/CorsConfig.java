@@ -3,6 +3,7 @@ package com.mfml.trader.server.launcher.config;
 import org.springframework.context.annotation.Configuration;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -24,6 +25,18 @@ public class CorsConfig implements Filter {
         response.setHeader("Access-Control-Allow-Methods", "*");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type,set-cookie,x-requested-with");
+        if (request instanceof HttpServletRequest) {
+            HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+            if ("OPTIONS".equals(httpServletRequest.getMethod())) {
+                try {
+                    response.getWriter().print("OK");
+                    response.getWriter().flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return ;
+            }
+        }
         chain.doFilter(request, response);
     }
 
