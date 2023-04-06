@@ -7,6 +7,7 @@ import com.mfml.trader.server.core.chatgpt.ro.AskRo;
  * @date 2023-03-15 17:24
  */
 public interface ChatGptFacade {
+    String models();
 
     String chatGPT(AskRo ro);
 }

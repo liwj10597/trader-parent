@@ -9,6 +9,7 @@ import com.mfml.trader.server.core.chatgpt.ro.AskRo;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,12 @@ public class ChatGptController {
 
     @Resource
     ChatGptFacade chatGptFacade;
+
+    @ApiOperation(value = "models", notes = "models", tags = {"ChatGPT"})
+    @GetMapping(value = "models")
+    public String models() {
+        return chatGptFacade.models();
+    }
 
     @ApiOperation(value = "chatGPT", notes = "chatGPT", tags = {"ChatGPT"})
     @PostMapping(value = "chatGPT")

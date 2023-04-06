@@ -9,9 +9,7 @@ import com.mfml.trader.server.core.chatgpt.ro.AskRo;
 import com.mfml.trader.server.core.chatgpt.ro.Messages;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import javax.annotation.Resource;
@@ -30,6 +28,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
     @Resource
     RestTemplate restTemplate;
 
+    public static final String urlModels = "https://api.openai.com/v1/models";
     public static final String urlChat = "https://api.openai.com/v1/chat/completions";
     public static final List<String> accessTokens = Lists.newArrayList();
 
@@ -83,7 +82,19 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         params.put("max_tokens", ro.getMax_token());
         params.put("temperature", ro.getTemperature());
         params.put("stream", ro.getStream());
+        ResponseEntity<String> exchange = restTemplate.exchange(urlChat, HttpMethod.POST, new HttpEntity<>(params, headers), String.class);
+        return JSON.toJSONString(exchange);
+    }
 
-        return restTemplate.postForObject(urlChat, new HttpEntity<>(params, headers), String.class);
+    @Override
+    public String models() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth(accessTokens.get(RandomUtil.randomInt(accessTokens.size())));
+        headers.setAcceptCharset(Lists.newArrayList(Charsets.UTF_8));
+
+        HashMap<String, Object> params = new HashMap<>();
+        ResponseEntity<String> exchange = restTemplate.exchange(urlModels, HttpMethod.GET, new HttpEntity<>(params, headers), String.class);
+        return JSON.toJSONString(exchange);
     }
 }
