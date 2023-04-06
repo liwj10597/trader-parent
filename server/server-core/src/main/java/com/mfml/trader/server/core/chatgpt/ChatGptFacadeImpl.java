@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.mfml.trader.server.core.chatgpt.ro.AskRo;
+import com.mfml.trader.server.core.chatgpt.ro.Messages;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpEntity;
@@ -70,21 +71,19 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         ro.setModel(StringUtils.isBlank(ro.getModel()) ? "gpt-3.5-turbo" : ro.getModel());
         params.put("model", ro.getModel());
 
-        Map<String, String> map = new HashMap<>();
-        map.put("role", "user");
-        map.put("content", ro.getPrompt());
+        List<Messages> msgList = ro.getMessages();
         List<Map<String, String>> messages = Lists.newArrayList();
-        messages.add(map);
-        params.put("messages", messages);
-
-        StringBuffer buffer = new StringBuffer();
-        String json = restTemplate.postForObject(urlChat, new HttpEntity<>(params, headers), String.class);
-        JSONArray choices = JSON.parseObject(json).getJSONArray("choices");
-        for (int idx = 0; idx < choices.size(); idx++) {
-            String line = choices.getJSONObject(idx).getJSONObject("message").getString("content");
-            buffer.append(line.replaceAll("\n", ""));
+        for (Messages m : msgList) {
+            Map<String, String> map = new HashMap<>();
+            map.put("user", m.getRole());
+            map.put("content", m.getContent());
+            messages.add(map);
         }
+        params.put("messages", messages);
+        params.put("max_tokens", ro.getMax_token());
+        params.put("temperature", ro.getTemperature());
+        params.put("stream", ro.getStream());
 
-        return buffer.toString();
+        return restTemplate.postForObject(urlChat, new HttpEntity<>(params, headers), String.class);
     }
 }
