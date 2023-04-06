@@ -82,7 +82,8 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         params.put("max_tokens", ro.getMax_token());
         params.put("temperature", ro.getTemperature());
         params.put("stream", ro.getStream());
-        return restTemplate.exchange(urlChat, HttpMethod.POST, new HttpEntity<>(params, headers), String.class);
+        ResponseEntity<String> exchange = restTemplate.exchange(urlChat, HttpMethod.POST, new HttpEntity<>(params, headers), String.class);
+        return exchange.getBody();
     }
 
     @Override
@@ -93,6 +94,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         headers.setAcceptCharset(Lists.newArrayList(Charsets.UTF_8));
 
         HashMap<String, Object> params = new HashMap<>();
-        return restTemplate.exchange(urlModels, HttpMethod.GET, new HttpEntity<>(params, headers), String.class);
+        ResponseEntity<String> exchange = restTemplate.exchange(urlModels, HttpMethod.GET, new HttpEntity<>(params, headers), String.class);
+        return exchange.getBody();
     }
 }
