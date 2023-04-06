@@ -60,7 +60,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
      * @return
      */
     @Override
-    public String chatGPT(AskRo ro) {
+    public Object chatGPT(AskRo ro) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(accessTokens.get(RandomUtil.randomInt(accessTokens.size())));
@@ -82,19 +82,17 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         params.put("max_tokens", ro.getMax_token());
         params.put("temperature", ro.getTemperature());
         params.put("stream", ro.getStream());
-        ResponseEntity<String> exchange = restTemplate.exchange(urlChat, HttpMethod.POST, new HttpEntity<>(params, headers), String.class);
-        return JSON.toJSONString(exchange);
+        return restTemplate.exchange(urlChat, HttpMethod.POST, new HttpEntity<>(params, headers), String.class);
     }
 
     @Override
-    public String models() {
+    public Object models() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(accessTokens.get(RandomUtil.randomInt(accessTokens.size())));
         headers.setAcceptCharset(Lists.newArrayList(Charsets.UTF_8));
 
         HashMap<String, Object> params = new HashMap<>();
-        ResponseEntity<String> exchange = restTemplate.exchange(urlModels, HttpMethod.GET, new HttpEntity<>(params, headers), String.class);
-        return JSON.toJSONString(exchange);
+        return restTemplate.exchange(urlModels, HttpMethod.GET, new HttpEntity<>(params, headers), String.class);
     }
 }

@@ -29,14 +29,14 @@ public class ChatGptController {
     @ApiOperation(value = "models", notes = "models", tags = {"ChatGPT"})
     @RequestMapping(value="/models",method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
-    public String models() {
+    public Object models() {
         return chatGptFacade.models();
     }
 
     @ApiOperation(value = "chatGPT", notes = "chatGPT", tags = {"ChatGPT"})
     @PostMapping(value = "chatGPT")
     @ResponseBody
-    public String chatGPT(AskRo ro) {
+    public Object chatGPT(AskRo ro) {
         return chatGptFacade.chatGPT(ro);
     }
 
