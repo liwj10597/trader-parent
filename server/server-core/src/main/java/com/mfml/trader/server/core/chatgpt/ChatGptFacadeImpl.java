@@ -94,7 +94,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         headers.setAcceptCharset(Lists.newArrayList(Charsets.UTF_8));
 
         HashMap<String, Object> params = new HashMap<>();
-        ResponseEntity<String> exchange = restTemplate.exchange(urlModels, HttpMethod.GET, new HttpEntity<>(params, headers), String.class);
+        ResponseEntity<String> exchange = restTemplate.exchange(urlModels, HttpMethod.POST, new HttpEntity<>(params, headers), String.class);
         return JSON.toJSONString(exchange);
     }
 }
