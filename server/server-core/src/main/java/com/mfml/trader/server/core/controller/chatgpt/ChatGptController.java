@@ -36,7 +36,7 @@ public class ChatGptController {
     @ApiOperation(value = "chatGPT", notes = "chatGPT", tags = {"ChatGPT"})
     @PostMapping(value = "chatGPT")
     @ResponseBody
-    public Object chatGPT(AskRo ro) {
+    public Object chatGPT(@RequestBody AskRo ro) {
         return chatGptFacade.chatGPT(ro);
     }
 

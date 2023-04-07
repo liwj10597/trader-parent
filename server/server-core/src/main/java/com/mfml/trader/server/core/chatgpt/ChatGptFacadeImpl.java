@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.mfml.trader.server.core.chatgpt.ro.AskRo;
 import com.mfml.trader.server.core.chatgpt.ro.Messages;
 import lombok.extern.slf4j.Slf4j;
@@ -61,40 +62,52 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
      */
     @Override
     public Object chatGPT(AskRo ro) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(accessTokens.get(RandomUtil.randomInt(accessTokens.size())));
-        headers.setAcceptCharset(Lists.newArrayList(Charsets.UTF_8));
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(accessTokens.get(RandomUtil.randomInt(accessTokens.size())));
+            headers.setAcceptCharset(Lists.newArrayList(Charsets.UTF_8));
 
-        HashMap<String, Object> params = new HashMap<>();
-        ro.setModel(StringUtils.isBlank(ro.getModel()) ? "gpt-3.5-turbo" : ro.getModel());
-        params.put("model", ro.getModel());
+            HashMap<String, Object> params = new HashMap<>();
+            ro.setModel(StringUtils.isBlank(ro.getModel()) ? "gpt-3.5-turbo" : ro.getModel());
+            params.put("model", ro.getModel());
 
-        List<Messages> msgList = ro.getMessages();
-        List<Map<String, String>> messages = Lists.newArrayList();
-        for (Messages m : msgList) {
-            Map<String, String> map = new HashMap<>();
-            map.put("user", m.getRole());
-            map.put("content", m.getContent());
-            messages.add(map);
+            List<Messages> msgList = ro.getMessages();
+            List<Map<String, String>> messages = Lists.newArrayList();
+            for (Messages m : msgList) {
+                Map<String, String> map = new HashMap<>();
+                map.put("user", m.getRole());
+                map.put("content", m.getContent());
+                messages.add(map);
+            }
+            params.put("messages", messages);
+            params.put("max_tokens", ro.getMax_token());
+            params.put("temperature", ro.getTemperature());
+            params.put("stream", ro.getStream());
+            ResponseEntity<String> exchange = restTemplate.exchange(urlChat, HttpMethod.POST, new HttpEntity<>(params, headers), String.class);
+            return exchange.getBody();
+        } catch (Exception e) {
+            Map<String, Object> data = Maps.newLinkedHashMap();
+            data.put("error", e.getMessage());
+            return data;
         }
-        params.put("messages", messages);
-        params.put("max_tokens", ro.getMax_token());
-        params.put("temperature", ro.getTemperature());
-        params.put("stream", ro.getStream());
-        ResponseEntity<String> exchange = restTemplate.exchange(urlChat, HttpMethod.POST, new HttpEntity<>(params, headers), String.class);
-        return exchange.getBody();
     }
 
     @Override
     public Object models() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBearerAuth(accessTokens.get(RandomUtil.randomInt(accessTokens.size())));
-        headers.setAcceptCharset(Lists.newArrayList(Charsets.UTF_8));
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(accessTokens.get(RandomUtil.randomInt(accessTokens.size())));
+            headers.setAcceptCharset(Lists.newArrayList(Charsets.UTF_8));
 
-        HashMap<String, Object> params = new HashMap<>();
-        ResponseEntity<String> exchange = restTemplate.exchange(urlModels, HttpMethod.GET, new HttpEntity<>(params, headers), String.class);
-        return exchange.getBody();
+            HashMap<String, Object> params = new HashMap<>();
+            ResponseEntity<String> exchange = restTemplate.exchange(urlModels, HttpMethod.GET, new HttpEntity<>(params, headers), String.class);
+            return exchange.getBody();
+        } catch (Exception e) {
+            Map<String, Object> data = Maps.newLinkedHashMap();
+            data.put("error", e.getMessage());
+            return data;
+        }
     }
 }
