@@ -76,14 +76,23 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
             List<Map<String, String>> messages = Lists.newArrayList();
             for (Messages m : msgList) {
                 Map<String, String> map = new HashMap<>();
-                map.put("user", m.getRole());
+                map.put("role", m.getRole());
                 map.put("content", m.getContent());
                 messages.add(map);
             }
             params.put("messages", messages);
-            params.put("max_tokens", ro.getMax_token());
-            params.put("temperature", ro.getTemperature());
-            params.put("stream", ro.getStream());
+            Integer maxToken = ro.getMax_token();
+            if (null != maxToken) {
+                params.put("max_tokens", maxToken);
+            }
+            Double temperature = ro.getTemperature();
+            if (null != temperature) {
+                params.put("temperature", temperature);
+            }
+            Boolean stream = ro.getStream();
+            if (null != stream) {
+                params.put("stream", stream);
+            }
             ResponseEntity<String> exchange = restTemplate.exchange(urlChat, HttpMethod.POST, new HttpEntity<>(params, headers), String.class);
             return exchange.getBody();
         } catch (Exception e) {
