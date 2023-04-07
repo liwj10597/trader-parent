@@ -71,16 +71,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
             HashMap<String, Object> params = new HashMap<>();
             ro.setModel(StringUtils.isBlank(ro.getModel()) ? "gpt-3.5-turbo" : ro.getModel());
             params.put("model", ro.getModel());
-
-            List<Messages> msgList = ro.getMessages();
-            List<Map<String, String>> messages = Lists.newArrayList();
-            for (Messages m : msgList) {
-                Map<String, String> map = new HashMap<>();
-                map.put("role", m.getRole());
-                map.put("content", m.getContent());
-                messages.add(map);
-            }
-            params.put("messages", messages);
+            params.put("messages", ro.getMessages());
             Integer maxToken = ro.getMax_token();
             if (null != maxToken) {
                 params.put("max_tokens", maxToken);
