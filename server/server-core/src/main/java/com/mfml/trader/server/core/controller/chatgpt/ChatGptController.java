@@ -10,8 +10,10 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.util.List;
 
 /**
@@ -46,7 +48,23 @@ public class ChatGptController {
         if (StringUtils.isBlank(key)) {
             return ResultUtil.success(true);
         }
-        ChatGptFacadeImpl.accessTokens.add(key);
+        try {
+            // 写入文件
+            FileWriter writer = new FileWriter(new File("/home/work/server/accessTokens"));
+            BufferedWriter buffer = new BufferedWriter(writer);
+            buffer.write(key);
+            buffer.close();
+            writer.close();
+
+            // 写入内存
+            if (!ChatGptFacadeImpl.accessTokens.contains(key)) {
+                ChatGptFacadeImpl.accessTokens.add(key);
+            }
+        } catch (Exception e) {
+            log.warn("addToken warn ", e);
+            return ResultUtil.success(false);
+        }
+
         return ResultUtil.success(true);
     }
 

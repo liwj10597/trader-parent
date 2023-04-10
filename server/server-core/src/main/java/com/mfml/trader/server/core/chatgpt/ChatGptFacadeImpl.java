@@ -1,19 +1,20 @@
 package com.mfml.trader.server.core.chatgpt;
 
 import cn.hutool.core.util.RandomUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mfml.trader.server.core.chatgpt.ro.AskRo;
-import com.mfml.trader.server.core.chatgpt.ro.Messages;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +34,31 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
     public static final String urlChat = "https://api.openai.com/v1/chat/completions";
     public static final List<String> accessTokens = Lists.newArrayList();
 
+    @PostConstruct
+    public void init() {
+        // 读取到内存
+        BufferedReader buffer = null;
+        try {
+            File file = new File("/home/work/server/accessTokens");
+            buffer = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = buffer.readLine()) != null) {
+                if (StringUtils.isNotBlank(line) && !accessTokens.contains(line)) {
+                    accessTokens.add(line);
+                }
+            }
+        } catch (Exception e) {
+            log.warn("local warn", e);
+        } finally {
+            if (buffer != null) {
+                try {
+                    buffer.close();
+                } catch (Exception ex) {
+
+                }
+            }
+        }
+    }
 
     /**
      * 请求结果示例
