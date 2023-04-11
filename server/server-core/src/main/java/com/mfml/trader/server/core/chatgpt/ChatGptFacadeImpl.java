@@ -60,7 +60,8 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         }
     }
 
-    /**
+    /**openai.api_key = "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"
+     model_engine = "text-davinci-003"
      * 请求结果示例
      * {
      *   "id": "chatcmpl-6uX17caKajqsvi9WT8NKtjkvvhh7C",
