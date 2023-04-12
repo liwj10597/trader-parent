@@ -177,8 +177,8 @@ public class ChatGptController {
         sseEmitter.onError(
                 throwable -> {
                     try {
-                        log.info(LocalDateTime.now() + ", uid#" + "765431" + ", on error#" + throwable.toString());
-                        sseEmitter.send(SseEmitter.event().id("765431").name("发生异常！").data(throwable.getMessage()).reconnectTime(3000));
+                        log.info(LocalDateTime.now() + ", uid#" + uid + ", on error#" + throwable.toString());
+                        sseEmitter.send(SseEmitter.event().id(uid).name("发生异常！").data(throwable.getMessage()).reconnectTime(3000));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
