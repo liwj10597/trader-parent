@@ -1,16 +1,21 @@
 package com.mfml.trader.server.launcher;
 
+import com.google.common.collect.Lists;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.function.KeyRandomStrategy;
 import com.unfbx.chatgpt.interceptor.OpenAILogger;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.apache.commons.lang3.StringUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -23,8 +28,8 @@ import java.util.concurrent.TimeUnit;
 @MapperScan(basePackages = {"com.mfml.trader.server.dao.mapper", "com.mfml.trader.common.dao.mapper"})
 public class ServerApplication {
 
-    @Value("${chatgpt.apiKey}")
-    private List<String> apiKey;
+//    @Value("${chatgpt.apiKey}")
+//    private List<String> apiKey;
 
     public static void main(String[] args) {
         SpringApplication.run(ServerApplication.class, args);
@@ -32,6 +37,29 @@ public class ServerApplication {
 
     @Bean
     public OpenAiStreamClient openAiStreamClient() {
+        List<String> apiKey = Lists.newArrayList();
+        // 读取到内存
+        BufferedReader buffer = null;
+        try {
+            File file = new File("/home/work/server/accessTokens");
+            buffer = new BufferedReader(new FileReader(file));
+            String line;
+            while ((line = buffer.readLine()) != null) {
+                if (StringUtils.isNotBlank(line) && !apiKey.contains(line)) {
+                    apiKey.add(line);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (buffer != null) {
+                try {
+                    buffer.close();
+                } catch (Exception ex) {
+
+                }
+            }
+        }
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new OpenAILogger());
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
         OkHttpClient okHttpClient = new OkHttpClient
