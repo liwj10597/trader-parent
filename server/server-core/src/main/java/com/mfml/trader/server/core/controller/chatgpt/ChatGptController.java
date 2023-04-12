@@ -8,6 +8,7 @@ import com.mfml.trader.common.core.result.Result;
 import com.mfml.trader.common.core.result.ResultUtil;
 import com.mfml.trader.server.core.chatgpt.ChatGptFacade;
 import com.mfml.trader.server.core.chatgpt.ChatGptFacadeImpl;
+import com.mfml.trader.server.core.chatgpt.listener.LocalCache;
 import com.mfml.trader.server.core.chatgpt.listener.OpenSSEEventSourceListener;
 import com.mfml.trader.server.core.chatgpt.ro.AskRo;
 import com.mfml.trader.server.core.chatgpt.ro.Messages;
@@ -103,6 +104,7 @@ public class ChatGptController {
     }
 
 
+    @ApiOperation(value = "streamGPT", notes = "streamGPT", tags = {"streamGPT"})
     @PostMapping(value = "/streamGPT")
     @CrossOrigin
     @ResponseBody
@@ -113,6 +115,7 @@ public class ChatGptController {
 //            throw new BaseException(CommonError.SYS_ERROR);
 //        }
 //        String messageContext = (String) LocalCache.CACHE.get(uid);
+        String uid = Calendar.getInstance().getTime().toString();
         List<Message> messages = Lists.newLinkedList();
         if (!CollectionUtils.isEmpty(ro.getMessages())) {
             for(Messages msg : ro.getMessages()){
@@ -123,11 +126,54 @@ public class ChatGptController {
                 messages.add(currentMessage);
             }
         }
-        sseEmitter.send(SseEmitter.event().id("765431").name("连接成功！！！！").data(LocalDateTime.now()).reconnectTime(3000));
+        sseEmitter.send(SseEmitter.event().id(uid).name("连接成功！！！！").data(LocalDateTime.now()).reconnectTime(3000));
         sseEmitter.onCompletion(() -> {
-            log.info(LocalDateTime.now() + ", uid#765431 , on completion");
+            log.info(LocalDateTime.now() + ", uid#"+uid+" , on completion");
         });
-        sseEmitter.onTimeout(() -> log.info(LocalDateTime.now() + ", uid#" + 765431 + ", on timeout#" + sseEmitter.getTimeout()));
+        sseEmitter.onTimeout(() -> log.info(LocalDateTime.now() + ", uid#" + uid + ", on timeout#" + sseEmitter.getTimeout()));
+        sseEmitter.onError(
+                throwable -> {
+                    try {
+                        log.info(LocalDateTime.now() + ", uid#" + uid + ", on error#" + throwable.toString());
+                        sseEmitter.send(SseEmitter.event().id(uid).name("发生异常！").data(throwable.getMessage()).reconnectTime(3000));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
+        OpenSSEEventSourceListener openAIEventSourceListener = new OpenSSEEventSourceListener(sseEmitter);
+        openAiStreamClient.streamChatCompletion(messages, openAIEventSourceListener);
+//        LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
+        return sseEmitter;
+    }
+
+    @GetMapping("/streamTest")
+    @CrossOrigin
+    public SseEmitter streamTest(@RequestParam("message") String msg, @RequestHeader Map<String, String> headers) throws IOException {
+        //默认30秒超时,设置为0L则永不超时
+        SseEmitter sseEmitter = new SseEmitter(0l);
+        String uid = headers.get("uid");
+        if (StrUtil.isBlank(uid)) {
+            throw new BaseException(CommonError.SYS_ERROR);
+        }
+        String messageContext = (String) LocalCache.CACHE.get(uid);
+        List<Message> messages = new ArrayList<>();
+        if (StrUtil.isNotBlank(messageContext)) {
+            messages = JSONUtil.toList(messageContext, Message.class);
+            if (messages.size() >= 10) {
+                messages = messages.subList(1, 10);
+            }
+            Message currentMessage = Message.builder().content(msg).role(Message.Role.USER).build();
+            messages.add(currentMessage);
+        } else {
+            Message currentMessage = Message.builder().content(msg).role(Message.Role.USER).build();
+            messages.add(currentMessage);
+        }
+        sseEmitter.send(SseEmitter.event().id(uid).name("连接成功！！！！").data(LocalDateTime.now()).reconnectTime(3000));
+        sseEmitter.onCompletion(() -> {
+            log.info(LocalDateTime.now() + ", uid#" + uid + ", on completion");
+        });
+        sseEmitter.onTimeout(() -> log.info(LocalDateTime.now() + ", uid#" + uid + ", on timeout#" + sseEmitter.getTimeout()));
         sseEmitter.onError(
                 throwable -> {
                     try {
@@ -140,7 +186,9 @@ public class ChatGptController {
         );
         OpenSSEEventSourceListener openAIEventSourceListener = new OpenSSEEventSourceListener(sseEmitter);
         openAiStreamClient.streamChatCompletion(messages, openAIEventSourceListener);
-//        LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
+        LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
         return sseEmitter;
     }
+
+
 }
