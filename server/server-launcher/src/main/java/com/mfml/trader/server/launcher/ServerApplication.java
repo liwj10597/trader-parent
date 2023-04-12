@@ -1,6 +1,7 @@
 package com.mfml.trader.server.launcher;
 
 import com.google.common.collect.Lists;
+import com.mfml.trader.server.core.chatgpt.ChatGptFacadeImpl;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.function.KeyRandomStrategy;
 import com.unfbx.chatgpt.interceptor.OpenAILogger;
@@ -37,29 +38,6 @@ public class ServerApplication {
 
     @Bean
     public OpenAiStreamClient openAiStreamClient() {
-        List<String> apiKey = Lists.newArrayList();
-        // 读取到内存
-        BufferedReader buffer = null;
-        try {
-            File file = new File("/home/work/server/accessTokens");
-            buffer = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = buffer.readLine()) != null) {
-                if (StringUtils.isNotBlank(line) && !apiKey.contains(line)) {
-                    apiKey.add(line);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (buffer != null) {
-                try {
-                    buffer.close();
-                } catch (Exception ex) {
-
-                }
-            }
-        }
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new OpenAILogger());
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
         OkHttpClient okHttpClient = new OkHttpClient
@@ -71,7 +49,7 @@ public class ServerApplication {
                 .build();
         return OpenAiStreamClient
                 .builder()
-                .apiKey(apiKey)
+                .apiKey(ChatGptFacadeImpl.accessTokens)
                 //自定义key使用策略 默认随机策略
                 .keyStrategy(new KeyRandomStrategy())
                 .okHttpClient(okHttpClient)
