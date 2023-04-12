@@ -69,5 +69,5 @@ mybatis-plus:
 secret:
   key: 123abc#
 
-chatgpt:
-  apiKey: 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,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
+#chatgpt:
+#  apiKey: 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
