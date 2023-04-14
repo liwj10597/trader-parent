@@ -62,7 +62,7 @@ public class OpenSSEEventSourceListener extends EventSourceListener {
         ChatCompletionResponse completionResponse = mapper.readValue(data, ChatCompletionResponse.class); // 读取Json
         sseEmitter.send(SseEmitter.event()
                 .id(completionResponse.getId())
-                .data(completionResponse.getChoices().get(0).getDelta())
+                .data(data)
                 .reconnectTime(3000));
     }
 
