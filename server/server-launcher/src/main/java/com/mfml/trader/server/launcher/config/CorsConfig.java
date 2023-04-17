@@ -27,6 +27,11 @@ public class CorsConfig implements Filter {
         response.setHeader("Access-Control-Allow-Headers", "Content-Type,set-cookie,x-requested-with");
         if (request instanceof HttpServletRequest) {
             HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+            // streamGPT add Content-Type, try to fix 406 error
+            if (httpServletRequest.getPathInfo().contains("streamGPT")) {
+                response.setHeader("Content-Type", "text/event-stream");
+            }
+
             if ("OPTIONS".equals(httpServletRequest.getMethod())) {
                 try {
                     response.getWriter().print("OK");
