@@ -30,7 +30,7 @@ import java.util.List;
 @Slf4j
 @ApiScan
 @RestController
-public class StreamChatGptController {
+public class SSEController {
 
     @Resource
     OpenAiStreamClient openAiStreamClient;
