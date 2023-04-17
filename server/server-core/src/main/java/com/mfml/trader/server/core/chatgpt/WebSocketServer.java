@@ -1,4 +1,4 @@
-package com.mfml.trader.server.core.controller.chatgpt;
+package com.mfml.trader.server.core.chatgpt;
 
 import cn.hutool.json.JSONUtil;
 import com.mfml.trader.common.core.utils.JsonUtils;
@@ -30,7 +30,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 @Slf4j
 @Component
 @ServerEndpoint("/websocket/{uid}")
-public class WebSocketController {
+public class WebSocketServer {
 
     private static OpenAiStreamClient openAiStreamClient;
 
@@ -44,12 +44,12 @@ public class WebSocketController {
     //用户id -目前是按浏览器随机生成
     private String uid;
 
-    private static CopyOnWriteArraySet<WebSocketController> webSocketSet = new CopyOnWriteArraySet<>();
+    private static CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<>();
 
     /**
      * 用来存放每个客户端对应的WebSocketServer对象
      */
-    private static ConcurrentHashMap<String, WebSocketController> webSocketMap = new ConcurrentHashMap();
+    private static ConcurrentHashMap<String, WebSocketServer> webSocketMap = new ConcurrentHashMap();
 
     /**
      * 为了保存在线用户信息，在方法中新建一个list存储一下【实际项目依据复杂度，可以存储到数据库或者缓存】
