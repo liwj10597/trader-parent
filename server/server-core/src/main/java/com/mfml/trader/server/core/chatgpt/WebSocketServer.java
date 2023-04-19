@@ -90,8 +90,8 @@ public class WebSocketServer {
         String messageContext = (String) LocalCache.CACHE.get(uid);
         if (StringUtils.isNotBlank(messageContext)) {
             messages = JSONUtil.toList(messageContext, Message.class);
-            if (messages.size() >= 12) {
-                messages = messages.subList(messages.size() - 12, messages.size());
+            if (messages.size() >= 10) {
+                messages = messages.subList(messages.size() - 10, messages.size());
             }
         }
 
@@ -105,13 +105,13 @@ public class WebSocketServer {
 
         if (StringUtils.isNotBlank(preResponse)) {
             Message responseMessage = Message.builder()
-                    .content(preResponse)
+                    .content(preResponse.replaceAll("\n", ""))
                     .role(Message.Role.ASSISTANT)
                     .build();
             messages.add(responseMessage);
         }
         Message currentMessage = Message.builder()
-                .content(content)
+                .content(content.replaceAll("\n", ""))
                 .role(Message.Role.USER)
                 .build();
         messages.add(currentMessage);
@@ -123,7 +123,7 @@ public class WebSocketServer {
                 .temperature(temperature == null ? 0.2 : temperature)
                 .stream(true)
                 .build();
-        log.info("上下文{}" + chatCompletion);
+        log.info("上下文{}", chatCompletion);
         openAiStreamClient.streamChatCompletion(chatCompletion, new OpenAIWebSocketEventSourceListener(this.session));
         LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages.subList(1, messages.size())), LocalCache.TIMEOUT);
     }
