@@ -115,8 +115,9 @@ public class WebSocketServer {
                 .temperature(temperature == null ? 0.2 : temperature)
                 .stream(true)
                 .build();
+        log.info("上下文{}" + chatCompletion);
         openAiStreamClient.streamChatCompletion(chatCompletion, new OpenAIWebSocketEventSourceListener(this.session));
-        LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages), LocalCache.TIMEOUT);
+        LocalCache.CACHE.put(uid, JSONUtil.toJsonStr(messages.subList(1, messages.size())), LocalCache.TIMEOUT);
     }
 }
 
