@@ -17,6 +17,7 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 描述：websocket 服务端
@@ -80,18 +81,26 @@ public class WebSocketServer {
     public void onMessage(String obj) {
         log.info("[连接ID:{}] 收到消息:{}", this.uid, obj);
         StreamRo ro = JsonUtils.parseObject(obj, StreamRo.class);
-        String prompt = ro.getPrompt();
-        String content = ro.getContent();
-        String preResponse = ro.getPreResponse();
+        String prompt = Optional.ofNullable(ro.getPrompt()).orElse("");
+        String content = Optional.ofNullable(ro.getContent()).orElse("");
+        String preResponse = Optional.ofNullable(ro.getPreResponse()).orElse("");
         Integer maxTokens = ro.getMaxTokens();
         Double temperature = ro.getTemperature();
 
+        // 保证请求openai的内容不至于过长导致性能很差
         List<Message> messages = new ArrayList<>();
-        String messageContext = (String) LocalCache.CACHE.get(uid);
-        if (StringUtils.isNotBlank(messageContext)) {
-            messages = JSONUtil.toList(messageContext, Message.class);
-            if (messages.size() >= 10) {
-                messages = messages.subList(messages.size() - 10, messages.size());
+        String value = (String) LocalCache.CACHE.get(uid);
+        if (StringUtils.isNotBlank(value)) {
+            List<Message> cacheList = JSONUtil.toList(value, Message.class);
+            int total = prompt.length() + preResponse.length() + content.length();
+            int from = cacheList.size() - 1;
+            for (int idx = from; idx >= 0; idx--) {
+                Message msgObj = cacheList.get(idx);
+                String c = msgObj.getContent();
+                total = total + c.length();
+                if (total <= 1024) {
+                    messages.add(0, msgObj);
+                }
             }
         }
 
