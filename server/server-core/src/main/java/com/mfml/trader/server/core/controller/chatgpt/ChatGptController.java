@@ -12,6 +12,7 @@ import com.mfml.trader.server.core.chatgpt.listener.LocalCache;
 import com.mfml.trader.server.core.chatgpt.listener.OpenSSEEventSourceListener;
 import com.mfml.trader.server.core.chatgpt.ro.AskRo;
 import com.mfml.trader.server.core.chatgpt.ro.Messages;
+import com.mfml.trader.server.core.client.StreamClient;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.entity.chat.Message;
 import com.unfbx.chatgpt.exception.BaseException;
@@ -79,8 +80,8 @@ public class ChatGptController {
             writer.close();
 
             // 写入内存
-            if (!ChatGptFacadeImpl.accessTokens.contains(key)) {
-                ChatGptFacadeImpl.accessTokens.add(key);
+            if (!StreamClient.accessTokens.contains(key)) {
+                StreamClient.accessTokens.add(key);
             }
         } catch (Exception e) {
             log.warn("addToken warn ", e);
@@ -93,13 +94,13 @@ public class ChatGptController {
     @ApiOperation(value = "getToken", notes = "getToken", tags = {"Console"})
     @PostMapping(value = "getToken")
     public Result<List<String>> getToken() {
-        return ResultUtil.success(ChatGptFacadeImpl.accessTokens);
+        return ResultUtil.success(StreamClient.accessTokens);
     }
 
     @ApiOperation(value = "cleanToken", notes = "cleanToken", tags = {"Console"})
     @PostMapping(value = "cleanToken")
     public Result<Boolean> deleteToken(@RequestParam(value = "key") String key) {
-        ChatGptFacadeImpl.accessTokens.clear();
+        StreamClient.accessTokens.clear();
         return ResultUtil.success(true);
     }
 

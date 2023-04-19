@@ -5,6 +5,7 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mfml.trader.server.core.chatgpt.ro.AskRo;
+import com.mfml.trader.server.core.client.StreamClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.*;
@@ -32,35 +33,6 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
 
     public static final String urlModels = "https://api.openai.com/v1/models";
     public static final String urlChat = "https://api.openai.com/v1/chat/completions";
-    public static final List<String> accessTokens = Lists.newArrayList();
-
-    @PostConstruct
-    public void init() {
-        log.info("accessTokens init start");
-        // 读取到内存
-        BufferedReader buffer = null;
-        try {
-            File file = new File("/home/work/server/accessTokens");
-            buffer = new BufferedReader(new FileReader(file));
-            String line;
-            while ((line = buffer.readLine()) != null) {
-                if (StringUtils.isNotBlank(line) && !accessTokens.contains(line)) {
-                    accessTokens.add(line);
-                }
-            }
-            log.info("accessTokens init end");
-        } catch (Exception e) {
-            log.warn("local warn", e);
-        } finally {
-            if (buffer != null) {
-                try {
-                    buffer.close();
-                } catch (Exception ex) {
-
-                }
-            }
-        }
-    }
 
     /**openai.api_key = "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"
      model_engine = "text-davinci-003"
@@ -94,7 +66,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(accessTokens.get(RandomUtil.randomInt(accessTokens.size())));
+            headers.setBearerAuth(StreamClient.accessTokens.get(RandomUtil.randomInt(StreamClient.accessTokens.size())));
             headers.setAcceptCharset(Lists.newArrayList(Charsets.UTF_8));
 
             HashMap<String, Object> params = new HashMap<>();
@@ -127,7 +99,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(accessTokens.get(RandomUtil.randomInt(accessTokens.size())));
+            headers.setBearerAuth(StreamClient.accessTokens.get(RandomUtil.randomInt(StreamClient.accessTokens.size())));
             headers.setAcceptCharset(Lists.newArrayList(Charsets.UTF_8));
 
             HashMap<String, Object> params = new HashMap<>();
