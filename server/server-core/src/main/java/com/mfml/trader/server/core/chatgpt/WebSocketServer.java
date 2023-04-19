@@ -98,10 +98,13 @@ public class WebSocketServer {
                 Message msgObj = cacheList.get(idx);
                 String c = msgObj.getContent();
                 total = total + c.length();
-                if (total <= 1024) {
+                if (total <= 512) {
                     messages.add(0, msgObj);
                 }
             }
+        }
+        if (messages.size() >= 10) {
+            messages = messages.subList(messages.size() - 10, messages.size());
         }
 
         if (StringUtils.isNotBlank(prompt)) {
