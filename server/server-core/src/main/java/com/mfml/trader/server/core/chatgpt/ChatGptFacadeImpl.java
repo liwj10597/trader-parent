@@ -32,7 +32,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
 
     public static final String urlModels = "https://api.openai.com/v1/models";
     public static final String urlChat = "https://api.openai.com/v1/chat/completions";
-    public static final List<String> accessTokens = Lists.newArrayList();
+    public static final List<String> accessTokens = Lists.newArrayList("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");
 
     @PostConstruct
     public void init() {
