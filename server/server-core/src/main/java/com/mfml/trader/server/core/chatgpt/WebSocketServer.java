@@ -16,10 +16,7 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * 描述：websocket 服务端
@@ -39,23 +36,10 @@ public class WebSocketServer {
         this.openAiStreamClient = openAiStreamClient;
     }
 
-    //当前会话
+    // 当前会话
     private Session session;
-    //用户id -目前是按浏览器随机生成
+    // 用户id -目前是按浏览器随机生成
     private String uid;
-
-    private static CopyOnWriteArraySet<WebSocketServer> webSocketSet = new CopyOnWriteArraySet<>();
-
-    /**
-     * 用来存放每个客户端对应的WebSocketServer对象
-     */
-    private static ConcurrentHashMap<String, WebSocketServer> webSocketMap = new ConcurrentHashMap();
-
-    /**
-     * 为了保存在线用户信息，在方法中新建一个list存储一下【实际项目依据复杂度，可以存储到数据库或者缓存】
-     */
-    private final static List<Session> SESSIONS = Collections.synchronizedList(new ArrayList<>());
-
 
     /**
      * 建立连接
@@ -66,15 +50,7 @@ public class WebSocketServer {
     public void onOpen(Session session, @PathParam("uid") String uid) {
         this.session = session;
         this.uid = uid;
-        webSocketSet.add(this);
-        SESSIONS.add(session);
-        if (webSocketMap.containsKey(uid)) {
-            webSocketMap.remove(uid);
-            webSocketMap.put(uid, this);
-        } else {
-            webSocketMap.put(uid, this);
-        }
-        log.info("[连接ID:{}] 建立连接, 当前连接数:{}", this.uid);
+        log.info("[连接ID:{}] 建立连接", this.uid);
     }
 
     /**
@@ -82,11 +58,7 @@ public class WebSocketServer {
      */
     @OnClose
     public void onClose() {
-        webSocketSet.remove(this);
-        if (webSocketMap.containsKey(uid)) {
-            webSocketMap.remove(uid);
-        }
-        log.info("[连接ID:{}] 断开连接, 当前连接数:{}", uid);
+        log.info("[连接ID:{}] 断开连接", uid);
     }
 
     /**
