@@ -9,6 +9,7 @@ import lombok.Data;
  */
 @Data
 public class StreamRo extends ToString {
+    private String preResponse;
     private String content;
     private String prompt;
     private Integer maxTokens;

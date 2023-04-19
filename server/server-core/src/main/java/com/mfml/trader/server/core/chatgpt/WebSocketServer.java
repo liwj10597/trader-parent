@@ -82,6 +82,7 @@ public class WebSocketServer {
         StreamRo ro = JsonUtils.parseObject(obj, StreamRo.class);
         String prompt = ro.getPrompt();
         String content = ro.getContent();
+        String preResponse = ro.getPreResponse();
         Integer maxTokens = ro.getMaxTokens();
         Double temperature = ro.getTemperature();
 
@@ -89,8 +90,8 @@ public class WebSocketServer {
         String messageContext = (String) LocalCache.CACHE.get(uid);
         if (StringUtils.isNotBlank(messageContext)) {
             messages = JSONUtil.toList(messageContext, Message.class);
-            if (messages.size() >= 10) {
-                messages = messages.subList(messages.size() - 10, messages.size());
+            if (messages.size() >= 12) {
+                messages = messages.subList(messages.size() - 12, messages.size());
             }
         }
 
@@ -102,6 +103,13 @@ public class WebSocketServer {
             messages.add(0, promptMessage);
         }
 
+        if (StringUtils.isNotBlank(preResponse)) {
+            Message responseMessage = Message.builder()
+                    .content(preResponse)
+                    .role(Message.Role.ASSISTANT)
+                    .build();
+            messages.add(responseMessage);
+        }
         Message currentMessage = Message.builder()
                 .content(content)
                 .role(Message.Role.USER)
