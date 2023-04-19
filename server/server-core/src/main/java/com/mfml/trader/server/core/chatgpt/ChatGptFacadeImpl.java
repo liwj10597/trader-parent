@@ -32,10 +32,11 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
 
     public static final String urlModels = "https://api.openai.com/v1/models";
     public static final String urlChat = "https://api.openai.com/v1/chat/completions";
-    public static final List<String> accessTokens = Lists.newArrayList("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");
+    public static final List<String> accessTokens = Lists.newArrayList();
 
     @PostConstruct
     public void init() {
+        log.info("accessTokens init start");
         // 读取到内存
         BufferedReader buffer = null;
         try {
@@ -47,6 +48,7 @@ public class ChatGptFacadeImpl implements ChatGptFacade {
                     accessTokens.add(line);
                 }
             }
+            log.info("accessTokens init end");
         } catch (Exception e) {
             log.warn("local warn", e);
         } finally {

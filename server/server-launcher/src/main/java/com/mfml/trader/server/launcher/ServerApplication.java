@@ -5,6 +5,7 @@ import com.mfml.trader.server.core.chatgpt.ChatGptFacadeImpl;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.function.KeyRandomStrategy;
 import com.unfbx.chatgpt.interceptor.OpenAILogger;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +26,7 @@ import java.util.concurrent.TimeUnit;
  * @create: 2022-07-15 15:51
  * @description:
  */
+@Slf4j
 @SpringBootApplication(scanBasePackages = {"com.mfml.trader.server","com.mfml.trader.common"})
 @MapperScan(basePackages = {"com.mfml.trader.server.dao.mapper", "com.mfml.trader.common.dao.mapper"})
 public class ServerApplication {
@@ -38,6 +40,7 @@ public class ServerApplication {
 
     @Bean
     public OpenAiStreamClient openAiStreamClient() {
+        log.info("openAiStreamClient init start");
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new OpenAILogger());
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
         OkHttpClient okHttpClient = new OkHttpClient
