@@ -1,4 +1,4 @@
-package com.mfml.trader.server.core.chatgpt.ro;
+package com.mfml.trader.server.core.service.chatgpt.ro;
 
 import com.mfml.trader.common.core.model.base.ToString;
 import lombok.Data;

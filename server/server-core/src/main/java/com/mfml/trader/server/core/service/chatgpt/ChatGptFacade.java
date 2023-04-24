@@ -1,6 +1,6 @@
-package com.mfml.trader.server.core.chatgpt;
+package com.mfml.trader.server.core.service.chatgpt;
 
-import com.mfml.trader.server.core.chatgpt.ro.AskRo;
+import com.mfml.trader.server.core.service.chatgpt.ro.AskRo;
 
 /**
  * @author caozhou

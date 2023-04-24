@@ -1,4 +1,4 @@
-package com.mfml.trader.server.core.pay.ro;
+package com.mfml.trader.server.core.service.pay.ro;
 
 import com.mfml.trader.common.core.annotation.NotBlank;
 import com.mfml.trader.common.core.model.base.ToString;

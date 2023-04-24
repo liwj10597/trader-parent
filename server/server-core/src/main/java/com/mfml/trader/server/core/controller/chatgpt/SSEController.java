@@ -1,11 +1,10 @@
 package com.mfml.trader.server.core.controller.chatgpt;
 
 import cn.hutool.json.JSONUtil;
-import com.google.common.collect.Lists;
 import com.mfml.trader.common.core.annotation.ApiScan;
-import com.mfml.trader.server.core.chatgpt.listener.LocalCache;
-import com.mfml.trader.server.core.chatgpt.listener.OpenSSEEventSourceListener;
-import com.mfml.trader.server.core.chatgpt.ro.StreamRo;
+import com.mfml.trader.server.core.listener.LocalCache;
+import com.mfml.trader.server.core.listener.OpenSSEEventSourceListener;
+import com.mfml.trader.server.core.service.chatgpt.ro.StreamRo;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.entity.chat.ChatCompletion;
 import com.unfbx.chatgpt.entity.chat.Message;
@@ -19,7 +18,6 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**

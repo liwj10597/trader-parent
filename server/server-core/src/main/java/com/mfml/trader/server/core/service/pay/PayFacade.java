@@ -1,8 +1,8 @@
-package com.mfml.trader.server.core.pay;
+package com.mfml.trader.server.core.service.pay;
 
 import com.mfml.trader.common.core.result.Result;
-import com.mfml.trader.server.core.pay.ro.PayValidationRo;
-import com.mfml.trader.server.core.pay.ro.SecretProduceRo;
+import com.mfml.trader.server.core.service.pay.ro.PayValidationRo;
+import com.mfml.trader.server.core.service.pay.ro.SecretProduceRo;
 
 import java.util.List;
 

@@ -1,7 +1,6 @@
 package com.mfml.trader.server.core.client;
 
 import com.google.common.collect.Lists;
-import com.mfml.trader.server.core.chatgpt.ChatGptFacadeImpl;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.function.KeyRandomStrategy;
 import com.unfbx.chatgpt.interceptor.OpenAILogger;

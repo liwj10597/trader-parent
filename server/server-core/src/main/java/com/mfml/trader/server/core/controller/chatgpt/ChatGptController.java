@@ -1,22 +1,16 @@
 package com.mfml.trader.server.core.controller.chatgpt;
 
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
 import com.google.common.collect.Lists;
 import com.mfml.trader.common.core.annotation.ApiScan;
 import com.mfml.trader.common.core.result.Result;
 import com.mfml.trader.common.core.result.ResultUtil;
-import com.mfml.trader.server.core.chatgpt.ChatGptFacade;
-import com.mfml.trader.server.core.chatgpt.ChatGptFacadeImpl;
-import com.mfml.trader.server.core.chatgpt.listener.LocalCache;
-import com.mfml.trader.server.core.chatgpt.listener.OpenSSEEventSourceListener;
-import com.mfml.trader.server.core.chatgpt.ro.AskRo;
-import com.mfml.trader.server.core.chatgpt.ro.Messages;
+import com.mfml.trader.server.core.service.chatgpt.ChatGptFacade;
+import com.mfml.trader.server.core.listener.OpenSSEEventSourceListener;
+import com.mfml.trader.server.core.service.chatgpt.ro.AskRo;
+import com.mfml.trader.server.core.service.chatgpt.ro.Messages;
 import com.mfml.trader.server.core.client.StreamClient;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.entity.chat.Message;
-import com.unfbx.chatgpt.exception.BaseException;
-import com.unfbx.chatgpt.exception.CommonError;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +27,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author caozhou

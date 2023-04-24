@@ -1,10 +1,10 @@
-package com.mfml.trader.server.core.chatgpt;
+package com.mfml.trader.server.core.service.chatgpt;
 
 import cn.hutool.json.JSONUtil;
 import com.mfml.trader.common.core.utils.JsonUtils;
-import com.mfml.trader.server.core.chatgpt.listener.LocalCache;
-import com.mfml.trader.server.core.chatgpt.listener.OpenAIWebSocketEventSourceListener;
-import com.mfml.trader.server.core.chatgpt.ro.StreamRo;
+import com.mfml.trader.server.core.listener.LocalCache;
+import com.mfml.trader.server.core.listener.OpenAIWebSocketEventSourceListener;
+import com.mfml.trader.server.core.service.chatgpt.ro.StreamRo;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.entity.chat.ChatCompletion;
 import com.unfbx.chatgpt.entity.chat.Message;

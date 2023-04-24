@@ -1,10 +1,10 @@
-package com.mfml.trader.server.core.controller.chatgpt;
+package com.mfml.trader.server.core.controller.pay;
 
 import com.mfml.trader.common.core.annotation.ApiScan;
 import com.mfml.trader.common.core.result.Result;
-import com.mfml.trader.server.core.pay.PayFacade;
-import com.mfml.trader.server.core.pay.ro.PayValidationRo;
-import com.mfml.trader.server.core.pay.ro.SecretProduceRo;
+import com.mfml.trader.server.core.service.pay.PayFacade;
+import com.mfml.trader.server.core.service.pay.ro.PayValidationRo;
+import com.mfml.trader.server.core.service.pay.ro.SecretProduceRo;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
