@@ -11,6 +11,7 @@ import com.mfml.trader.common.dao.domain.SecretVerificationDo;
 import com.mfml.trader.common.dao.mapper.SecretVerificationMapper;
 import com.mfml.trader.server.core.service.pay.ro.PayValidationRo;
 import com.mfml.trader.server.core.service.pay.ro.SecretProduceRo;
+import com.mfml.trader.server.core.service.pay.ro.AppProduceRo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
@@ -55,6 +56,7 @@ public class PayFacadeImpl implements PayFacade {
                 return ResultUtil.result(0, CodeUtil.ILLEGAL_SECRET, String.join(",", CodeUtil.ILLEGAL_SECRET.getDesc(), "secret已过期"));
             }
         } catch (Exception e) {
+            log.warn(e.getMessage());
             return ResultUtil.result(0, CodeUtil.FAILED, String.join(",", CodeUtil.FAILED.getDesc(), "请联系管理员"));
         }
         return ResultUtil.success(1);
@@ -77,5 +79,27 @@ public class PayFacadeImpl implements PayFacade {
             secrets.add(secret);
         }
         return ResultUtil.success(secrets);
+    }
+
+    @Override
+    public Result<Boolean> appProduce(AppProduceRo ro) {
+        try {
+            // 验签(预留)
+
+            // 查支付宝订单(预留)
+
+            // 生成许可
+            String produceDate = DateUtil.format(new Date(), DatePattern.NORM_DATE_PATTERN);
+            Integer days = ro.getDays();
+            SecretVerificationDo entity = new SecretVerificationDo();
+            entity.setProduceDate(produceDate);
+            entity.setSecretKey(ro.getUid());
+            entity.setSecretDays(days);
+            secretVerificationMapper.insert(entity);
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            return ResultUtil.fail(CodeUtil.DB_ERROR);
+        }
+        return ResultUtil.success(true);
     }
 }

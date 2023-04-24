@@ -3,6 +3,7 @@ package com.mfml.trader.server.core.controller.pay;
 import com.mfml.trader.common.core.annotation.ApiScan;
 import com.mfml.trader.common.core.result.Result;
 import com.mfml.trader.server.core.service.pay.PayFacade;
+import com.mfml.trader.server.core.service.pay.ro.AppProduceRo;
 import com.mfml.trader.server.core.service.pay.ro.PayValidationRo;
 import com.mfml.trader.server.core.service.pay.ro.SecretProduceRo;
 import io.swagger.annotations.ApiOperation;
@@ -37,5 +38,12 @@ public class PayController {
     @ResponseBody
     public Result<List<String>> secretProduce(@RequestBody SecretProduceRo ro) {
         return payFacade.secretProduce(ro);
+    }
+
+    @ApiOperation(value = "APP生成许可", notes = "APP生成许可", tags = {"Pay"})
+    @PostMapping(value = "appProduce")
+    @ResponseBody
+    public Result<Boolean> appProduce(@RequestBody AppProduceRo ro) {
+        return payFacade.appProduce(ro);
     }
 }
