@@ -1,4 +1,4 @@
-package com.mfml.trader.server.core.controller.pay;
+package com.mfml.trader.server.core.controller.chatgpt;
 
 import com.mfml.trader.common.core.annotation.ApiScan;
 import com.mfml.trader.common.core.result.Result;
@@ -27,20 +27,36 @@ public class PayController {
     @Resource
     PayFacade payFacade;
 
-    @ApiOperation(value = "秘钥验证", notes = "秘钥验证", tags = {"Pay"})
+
+    /**
+     * 验证许可是否过期，PC、APP均适用
+     * @param ro
+     * @return
+     */
+    @ApiOperation(value = "验证许可是否过期", notes = "验证许可是否过期", tags = {"Pay"})
     @PostMapping(value = "payValidation")
     @ResponseBody
     public Result<Integer> payValidation(@RequestBody PayValidationRo ro) {
         return payFacade.payValidation(ro);
     }
 
-    @ApiOperation(value = "秘钥生成", notes = "秘钥生成", tags = {"Pay"})
+    /**
+     * 用于PC端批量生成许可
+     * @param ro
+     * @return
+     */
+    @ApiOperation(value = "PC生成许可", notes = "PC生成许可", tags = {"Pay"})
     @PostMapping(value = "secretProduce")
     @ResponseBody
     public Result<List<String>> secretProduce(@RequestBody SecretProduceRo ro) {
         return payFacade.secretProduce(ro);
     }
 
+    /**
+     * 用于APP端支付成功后生成许可
+     * @param ro
+     * @return
+     */
     @ApiOperation(value = "APP生成许可", notes = "APP生成许可", tags = {"Pay"})
     @PostMapping(value = "appProduce")
     @ResponseBody
@@ -48,6 +64,11 @@ public class PayController {
         return payFacade.appProduce(ro);
     }
 
+    /**
+     * 获取支付宝订单信息
+     * @param ro
+     * @return
+     */
     @ApiOperation(value = "支付宝APP支付订单生成", notes = "支付宝APP支付订单生成", tags = {"Pay"})
     @PostMapping(value = "alipayTradeAppPay")
     @ResponseBody
