@@ -1,6 +1,7 @@
 package com.mfml.trader.server.core.service.pay;
 
 import com.mfml.trader.common.core.result.Result;
+import com.mfml.trader.server.core.service.pay.ro.AlipayTradeAppPayRo;
 import com.mfml.trader.server.core.service.pay.ro.PayValidationRo;
 import com.mfml.trader.server.core.service.pay.ro.SecretProduceRo;
 import com.mfml.trader.server.core.service.pay.ro.AppProduceRo;
@@ -29,4 +30,9 @@ public interface PayFacade {
      * APP生成许可
      */
     Result<Boolean> appProduce(AppProduceRo ro);
+
+    /**
+     * 生成支付宝订单
+     */
+    Result<String> alipayTradeAppPay(AlipayTradeAppPayRo ro);
 }

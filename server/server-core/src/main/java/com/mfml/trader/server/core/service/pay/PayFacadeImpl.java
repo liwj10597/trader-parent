@@ -2,13 +2,21 @@ package com.mfml.trader.server.core.service.pay;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson.JSONObject;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.domain.AlipayTradeAppPayModel;
+import com.alipay.api.request.AlipayTradeAppPayRequest;
+import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.google.common.collect.Lists;
 import com.mfml.trader.common.core.result.CodeUtil;
 import com.mfml.trader.common.core.result.Result;
 import com.mfml.trader.common.core.result.ResultUtil;
+import com.mfml.trader.common.core.utils.SnowflakeUtil;
 import com.mfml.trader.common.dao.domain.SecretVerificationDo;
 import com.mfml.trader.common.dao.mapper.SecretVerificationMapper;
+import com.mfml.trader.server.core.client.PayClient;
+import com.mfml.trader.server.core.service.pay.ro.AlipayTradeAppPayRo;
 import com.mfml.trader.server.core.service.pay.ro.PayValidationRo;
 import com.mfml.trader.server.core.service.pay.ro.SecretProduceRo;
 import com.mfml.trader.server.core.service.pay.ro.AppProduceRo;
@@ -26,6 +34,9 @@ import java.util.UUID;
 @Slf4j
 @Service
 public class PayFacadeImpl implements PayFacade {
+
+    @Resource
+    PayClient payClient;
 
     @Resource
     SecretVerificationMapper secretVerificationMapper;
@@ -101,5 +112,25 @@ public class PayFacadeImpl implements PayFacade {
             return ResultUtil.fail(CodeUtil.DB_ERROR);
         }
         return ResultUtil.success(true);
+    }
+
+    @Override
+    public Result<String> alipayTradeAppPay(AlipayTradeAppPayRo ro) {
+        AlipayTradeAppPayRequest request = new AlipayTradeAppPayRequest();
+
+        JSONObject bizContent = new JSONObject();
+        bizContent.put("out_trade_no", String.valueOf(SnowflakeUtil.nextId()));
+        bizContent.put("total_amount", ro.getTotalAmount());
+        bizContent.put("subject", ro.getSubject());
+        bizContent.put("time_expire", ro.getTimeExpire());
+        request.setBizContent(bizContent.toString());
+        try {
+            //这里和普通的接口调用不同，使用的是sdkExecute
+            AlipayTradeAppPayResponse response = payClient.getClientBT().sdkExecute(request);
+            return ResultUtil.success(response.getBody());//就是orderString 可以直接给客户端请求，无需再做处理。
+        } catch (AlipayApiException e) {
+            log.warn("alipayTradeAppPay error ", e);
+        }
+        return ResultUtil.fail(CodeUtil.FAILED);
     }
 }

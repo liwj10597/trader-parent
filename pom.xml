@@ -373,6 +373,12 @@
                 <artifactId>chatgpt-java</artifactId>
                 <version>1.0.10</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.alipay.sdk</groupId>
+                <artifactId>alipay-sdk-java</artifactId>
+                <version>4.35.110.ALL</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
