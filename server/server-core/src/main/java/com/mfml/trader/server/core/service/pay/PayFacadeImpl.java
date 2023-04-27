@@ -122,7 +122,7 @@ public class PayFacadeImpl implements PayFacade {
         bizContent.put("out_trade_no", String.valueOf(SnowflakeUtil.nextId()));
         bizContent.put("total_amount", ro.getTotalAmount());
         bizContent.put("subject", ro.getSubject());
-        bizContent.put("time_expire", ro.getTimeExpire());
+        bizContent.put("time_expire", DateUtil.format(DateUtil.offsetMinute(new Date(), 30).toJdkDate(), DatePattern.NORM_DATETIME_PATTERN));
         request.setBizContent(bizContent.toString());
         try {
             //这里和普通的接口调用不同，使用的是sdkExecute

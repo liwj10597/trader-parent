@@ -21,10 +21,4 @@ public class AlipayTradeAppPayRo extends ToString {
      */
     @NotBlank
     private String subject;
-    /**
-     * 绝对超时时间
-     * 选填，格式 yyyy-MM-dd HH:mm:ss
-     */
-    private String timeExpire;
-
 }
