@@ -1,10 +1,10 @@
 package com.mfml.trader.server.core.service.pay;
 
+import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
-import com.alipay.api.domain.AlipayTradeAppPayModel;
 import com.alipay.api.request.AlipayTradeAppPayRequest;
 import com.alipay.api.response.AlipayTradeAppPayResponse;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -22,9 +22,12 @@ import com.mfml.trader.server.core.service.pay.ro.SecretProduceRo;
 import com.mfml.trader.server.core.service.pay.ro.AppProduceRo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -100,18 +103,36 @@ public class PayFacadeImpl implements PayFacade {
             // 查支付宝订单(预留)
 
             // 生成许可
-            String produceDate = DateUtil.format(new Date(), DatePattern.NORM_DATE_PATTERN);
-            Integer days = ro.getDays();
-            SecretVerificationDo entity = new SecretVerificationDo();
-            entity.setProduceDate(produceDate);
-            entity.setSecretKey(ro.getUid());
-            entity.setSecretDays(days);
-            secretVerificationMapper.insert(entity);
+            List<SecretVerificationDo> list = secretVerificationMapper.selectList(new LambdaQueryWrapper<SecretVerificationDo>().eq(SecretVerificationDo::getSecretKey, ro.getUid()));
+            if (CollectionUtils.isEmpty(list)) {
+                SecretVerificationDo entity = new SecretVerificationDo();
+                entity.setProduceDate(DateUtil.format(new Date(), DatePattern.NORM_DATE_PATTERN));
+                entity.setSecretKey(ro.getUid());
+                entity.setSecretDays(ro.getDays());
+                entity.setVerifyBeginDatetime(DateUtil.format(new Date(), DatePattern.NORM_DATETIME_PATTERN));
+                entity.setVerifyEndDatetime(DateUtil.format(DateUtil.offsetDay(new Date(), ro.getDays()), DatePattern.NORM_DATETIME_PATTERN));
+                secretVerificationMapper.insert(entity);
+            } else {
+                SecretVerificationDo entity = list.get(0);
+                String endTime = Optional.ofNullable(entity.getVerifyEndDatetime()).orElse("");
+                String now = DateUtil.format(new Date(), DatePattern.NORM_DATETIME_PATTERN);
+                String r = endTime.compareTo(now) < 0 ? now : endTime;
+                Date rDate = DateUtil.parse(r, DatePattern.NORM_DATETIME_PATTERN).offset(DateField.DAY_OF_YEAR, ro.getDays()).toJdkDate();
+                entity.setVerifyEndDatetime(DateUtil.format(rDate, DatePattern.NORM_DATETIME_PATTERN));
+                entity.setUpdateTime(new Date());
+                secretVerificationMapper.updateById(entity);
+            }
         } catch (Exception e) {
             log.warn(e.getMessage());
             return ResultUtil.fail(CodeUtil.DB_ERROR);
         }
         return ResultUtil.success(true);
+    }
+
+    public static void main(String[] args) {
+        String endTime = "";
+        String now = "21";
+        System.out.println(endTime.compareTo(now));
     }
 
     @Override
