@@ -47,10 +47,11 @@ public class PayFacadeImpl implements PayFacade {
     @Override
     public Result<Integer> payValidation(PayValidationRo ro) {
         try {
-            SecretVerificationDo svdo = secretVerificationMapper.selectOne(new LambdaQueryWrapper<SecretVerificationDo>().eq(SecretVerificationDo::getSecretKey, ro.getSecretKey()));
-            if (null == svdo) {
-                return ResultUtil.result(0, CodeUtil.ILLEGAL_SECRET, String.join(",", CodeUtil.ILLEGAL_SECRET.getDesc()));
+            List<SecretVerificationDo> svdos = secretVerificationMapper.selectList(new LambdaQueryWrapper<SecretVerificationDo>().eq(SecretVerificationDo::getSecretKey, ro.getSecretKey()).orderByDesc(SecretVerificationDo::getUpdateTime));
+            if (CollectionUtils.isEmpty(svdos)) {
+                return ResultUtil.result(0, CodeUtil.SUCCESS, "");
             }
+            SecretVerificationDo svdo = svdos.get(0);
             String beginTime = svdo.getVerifyBeginDatetime();
             String endTime = svdo.getVerifyEndDatetime();
             if (null == beginTime || null == endTime) {
@@ -67,7 +68,7 @@ public class PayFacadeImpl implements PayFacade {
             long currentTime = new Date().getTime();
             long endT = DateUtil.parse(endTime, DatePattern.NORM_DATETIME_PATTERN).getTime();
             if (currentTime > endT) {
-                return ResultUtil.result(0, CodeUtil.ILLEGAL_SECRET, String.join(",", CodeUtil.ILLEGAL_SECRET.getDesc(), "secret已过期"));
+                return ResultUtil.result(0, CodeUtil.SUCCESS, "");
             }
         } catch (Exception e) {
             log.warn(e.getMessage());
