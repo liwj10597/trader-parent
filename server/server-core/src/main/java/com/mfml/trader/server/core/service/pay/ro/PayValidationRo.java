@@ -10,6 +10,6 @@ import lombok.Data;
  */
 @Data
 public class PayValidationRo extends ToString {
-    @NotBlank(message = "密钥不能为空")
+    @NotBlank(message = "用户id不能为空")
     private String secretKey;
 }

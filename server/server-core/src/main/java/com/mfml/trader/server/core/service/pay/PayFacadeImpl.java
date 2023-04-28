@@ -45,6 +45,20 @@ public class PayFacadeImpl implements PayFacade {
     SecretVerificationMapper secretVerificationMapper;
 
     @Override
+    public Result<String> queryValidation(PayValidationRo ro) {
+        try {
+            List<SecretVerificationDo> svdos = secretVerificationMapper.selectList(new LambdaQueryWrapper<SecretVerificationDo>().eq(SecretVerificationDo::getSecretKey, ro.getSecretKey()).orderByDesc(SecretVerificationDo::getUpdateTime));
+            if (CollectionUtils.isEmpty(svdos)) {
+                return ResultUtil.result("", CodeUtil.SUCCESS, "");
+            }
+            return ResultUtil.result(Optional.ofNullable(svdos.get(0).getVerifyEndDatetime()).orElse(""), CodeUtil.SUCCESS, "");
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            return ResultUtil.result("", CodeUtil.FAILED, String.join(",", CodeUtil.FAILED.getDesc(), "请联系管理员"));
+        }
+    }
+
+    @Override
     public Result<Integer> payValidation(PayValidationRo ro) {
         try {
             List<SecretVerificationDo> svdos = secretVerificationMapper.selectList(new LambdaQueryWrapper<SecretVerificationDo>().eq(SecretVerificationDo::getSecretKey, ro.getSecretKey()).orderByDesc(SecretVerificationDo::getUpdateTime));

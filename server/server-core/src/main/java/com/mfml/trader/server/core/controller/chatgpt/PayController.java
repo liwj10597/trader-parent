@@ -27,6 +27,18 @@ public class PayController {
     @Resource
     PayFacade payFacade;
 
+    /**
+     * 查询许可过期时间
+     * @param ro
+     * @return
+     */
+    @ApiOperation(value = "查询许可过期时间", notes = "查询许可过期时间", tags = {"Pay"})
+    @PostMapping(value = "queryValidation")
+    @ResponseBody
+    public Result<String> queryValidation(@RequestBody PayValidationRo ro) {
+        return payFacade.queryValidation(ro);
+    }
+
 
     /**
      * 验证许可是否过期，PC、APP均适用

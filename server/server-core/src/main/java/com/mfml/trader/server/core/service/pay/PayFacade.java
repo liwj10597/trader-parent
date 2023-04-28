@@ -15,7 +15,13 @@ import java.util.List;
 public interface PayFacade {
 
     /**
-     * 秘钥验证/app许可验证
+     * 查询许可过期时间
+     * @return true 表示验证成功；false表示验证失败
+     */
+    Result<String> queryValidation(PayValidationRo ro);
+
+    /**
+     * 验证许可是否过期，PC、APP均适用
      * @param ro
      * @return true 表示验证成功；false表示验证失败
      */
