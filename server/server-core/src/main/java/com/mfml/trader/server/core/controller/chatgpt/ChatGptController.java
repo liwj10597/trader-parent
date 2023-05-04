@@ -11,7 +11,6 @@ import com.mfml.trader.server.core.service.chatgpt.ro.Messages;
 import com.mfml.trader.server.core.client.StreamClient;
 import com.unfbx.chatgpt.OpenAiStreamClient;
 import com.unfbx.chatgpt.entity.chat.Message;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -44,21 +43,18 @@ public class ChatGptController {
     OpenAiStreamClient openAiStreamClient;
 
 
-    @ApiOperation(value = "models", notes = "models", tags = {"ChatGPT"})
     @RequestMapping(value="/models",method = {RequestMethod.POST,RequestMethod.GET})
     @ResponseBody
     public Object models() {
         return chatGptFacade.models();
     }
 
-    @ApiOperation(value = "chatGPT", notes = "chatGPT", tags = {"ChatGPT"})
     @PostMapping(value = "chatGPT")
     @ResponseBody
     public Object chatGPT(@RequestBody AskRo ro) {
         return chatGptFacade.chatGPT(ro);
     }
 
-    @ApiOperation(value = "addToken", notes = "addToken", tags = {"Console"})
     @PostMapping(value = "addToken")
     public Result<Boolean> addToken(@RequestParam(value = "key") String key) {
         if (StringUtils.isBlank(key)) {
@@ -84,13 +80,11 @@ public class ChatGptController {
         return ResultUtil.success(true);
     }
 
-    @ApiOperation(value = "getToken", notes = "getToken", tags = {"Console"})
     @PostMapping(value = "getToken")
     public Result<List<String>> getToken() {
         return ResultUtil.success(StreamClient.accessTokens);
     }
 
-    @ApiOperation(value = "cleanToken", notes = "cleanToken", tags = {"Console"})
     @PostMapping(value = "cleanToken")
     public Result<Boolean> deleteToken(@RequestParam(value = "key") String key) {
         StreamClient.accessTokens.clear();
@@ -98,7 +92,6 @@ public class ChatGptController {
     }
 
 
-    @ApiOperation(value = "streamGPT", notes = "streamGPT", tags = {"streamGPT"})
     @PostMapping(value = "streamGPT")
     @CrossOrigin
     @ResponseBody

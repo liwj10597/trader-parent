@@ -50,6 +50,10 @@ spring:
           enabled: true
           db-type: mysql
       connectionProperties: druid.stat.mergeSql\=true;druid.stat.slowSqlMillis\=1000
+  redis:
+    host: 43.153.111.71
+    port: 6379
+    database: 0
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/*Mapper.xml
