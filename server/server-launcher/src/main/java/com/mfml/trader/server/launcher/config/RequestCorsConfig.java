@@ -22,7 +22,7 @@ public class RequestCorsConfig implements WebMvcConfigurer {
         // 解决request访问时的跨域问题：No 'Access-Control-Allow-Origin' header is present on the
         // requested resource.
         registry.addMapping("/**")
-                .allowedOrigins("*")
+                .allowedOriginPatterns("*")
                 .allowedMethods("GET", "PUT", "POST","HEAD","DELETE","OPTIONS")
                 .allowCredentials(true).maxAge(3600)
                 .allowedHeaders("*");
