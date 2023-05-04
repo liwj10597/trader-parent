@@ -20,7 +20,6 @@ import java.util.List;
  * @date 2023-03-27 16:38
  */
 @Slf4j
-@ApiScan
 @RestController
 public class PayController {
     @Resource

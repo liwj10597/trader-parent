@@ -26,7 +26,6 @@ import java.util.List;
  * @date 2023-03-15 18:05
  */
 @Slf4j
-@ApiScan
 @RestController
 public class SSEController {
 
