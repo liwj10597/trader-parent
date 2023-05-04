@@ -43,7 +43,8 @@ CHECK_LIMIT=100
 KILL_COUNT=0
 KILL_LIMIT=100
 
-JAVA_HOME="/home/work/develop/jdk1.8"
+JAVA_HOME="/home/work/develop/jdk11"
+# JAVA_HOME="/home/work/develop/jdk1.8"
 # JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.8.0_112.jdk/Contents/Home"
 JAVA="${JAVA_HOME}/bin/java"
 
@@ -51,7 +52,7 @@ JAVA="${JAVA_HOME}/bin/java"
 JAVA_OPTS="-Xss512k -XX:MetaspaceSize=512m -XX:MaxMetaspaceSize=512m -Xms2G -Xmx2G -XX:+UseG1GC"
 
 # 打印GC日志
-JAVA_OPTS="${JAVA_OPTS} -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintHeapAtGC -Xloggc:"${GC_LOG_FILE}
+# JAVA_OPTS="${JAVA_OPTS} -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintHeapAtGC -Xloggc:"${GC_LOG_FILE}
 
 # JVM发生OOM时，dump文件
 JAVA_OPTS="${JAVA_OPTS} -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath="${DUMP_LOG_FILE}
@@ -63,7 +64,7 @@ JAVA_OPTS="${JAVA_OPTS} -XX:-UseBiasedLocking -XX:-UseCounterDecay -XX:AutoBoxCa
 JAVA_OPTS="${JAVA_OPTS} -Djava.security.egd=file:/dev/./urandom -Djava.io.tmpdir=/tmp -Dfile.encoding=UTF-8"
 
 # 开启远程debug
-JAVA_OPTS="${JAVA_OPTS} -Xdebug -Xrunjdwp:transport=dt_socket,address=8005,server=y,suspend=n"
+# JAVA_OPTS="${JAVA_OPTS} -Xdebug -Xrunjdwp:transport=dt_socket,address=8005,server=y,suspend=n"
 
 # 数据库参数
 SPRING_PARAM=" --spring.datasource.username=root --spring.datasource.password=chatGPT123@  --spring.datasource.ip=localhost:3306 "
