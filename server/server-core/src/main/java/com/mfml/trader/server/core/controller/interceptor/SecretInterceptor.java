@@ -6,8 +6,7 @@ import com.mfml.trader.common.core.result.Result;
 import com.mfml.trader.common.core.result.ResultUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-
+import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +16,7 @@ import java.util.Objects;
  * 定义安全拦截器
  */
 @Component
-public class SecretInterceptor extends HandlerInterceptorAdapter {
+public class SecretInterceptor implements AsyncHandlerInterceptor {
 
 
 
